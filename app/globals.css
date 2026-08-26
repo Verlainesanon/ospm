@@ -1,0 +1,490 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-creme text-plomb-noir font-sans antialiased;
+    /* Deux voiles tres faibles : de la matiere, pas un degrade decoratif. */
+    background-image:
+      radial-gradient(1200px 600px at 78% -10%, rgba(27, 92, 224, 0.08), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(214, 32, 39, 0.05), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-normal text-plomb-noir;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-encre text-creme;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme("colors.encre.vif");
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+
+    /* Sans cette regle, les elements en attente de revelation resteraient
+       invisibles pour qui a desactive les animations. */
+    [data-anim],
+    [data-anim] > *,
+    .lettres > span {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+@layer components {
+  /* --- Signature : deux mots en surimpression hors repere -------------- */
+  .surimpression {
+    @apply relative inline-block;
+  }
+  .surimpression > .calque {
+    @apply absolute inset-0 select-none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .surimpression > .calque-bleu {
+    @apply text-encre-vif animate-caler;
+    mix-blend-mode: multiply;
+  }
+  .surimpression > .calque-rouge {
+    @apply text-rouge animate-caler-rouge;
+    mix-blend-mode: multiply;
+  }
+  .surimpression > .calque-texte {
+    @apply relative text-plomb-noir;
+  }
+  .surimpression-hover > .calque {
+    transition: transform 260ms theme("transitionTimingFunction.douce");
+  }
+  .surimpression-hover:hover > .calque-bleu {
+    transform: translate(-0.03em, 0.018em);
+  }
+  .surimpression-hover:hover > .calque-rouge {
+    transform: translate(0.03em, -0.018em);
+  }
+
+  /* --- Reperes d'imprimeur : detail, plus decor de fond ---------------- */
+  .repere {
+    @apply relative block h-3 w-3 shrink-0;
+  }
+  .repere::before,
+  .repere::after {
+    content: "";
+    @apply absolute bg-encre-vif;
+  }
+  .repere::before {
+    @apply left-1/2 top-0 h-full w-px -translate-x-1/2;
+  }
+  .repere::after {
+    @apply left-0 top-1/2 h-px w-full -translate-y-1/2;
+  }
+  .repere-rouge::before,
+  .repere-rouge::after {
+    @apply bg-rouge;
+  }
+
+  /* --- Texte ----------------------------------------------------------- */
+  .eyebrow {
+    @apply text-eyebrow font-medium uppercase tracking-[0.08em] text-encre-vif;
+  }
+
+  .plomb-texte {
+    @apply text-[1.0625rem] leading-relaxed text-plomb;
+  }
+
+  .ref {
+    @apply font-mono text-micro text-plomb-clair;
+  }
+
+  /* --- Surfaces --------------------------------------------------------- */
+  .plaque {
+    @apply rounded-plaque border border-black/[0.06] bg-white shadow-plaque;
+  }
+
+  .plaque-douce {
+    @apply rounded-douce border border-black/[0.06] bg-white;
+  }
+
+  .carte-lien {
+    @apply plaque overflow-hidden transition duration-300 ease-douce
+           hover:-translate-y-1 hover:shadow-releve;
+  }
+
+  /* --- Boutons ---------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5
+           text-[0.9375rem] font-medium transition duration-200 ease-douce;
+  }
+  .btn-encre {
+    @apply btn bg-encre text-white shadow-plaque hover:bg-encre-vif hover:shadow-releve;
+  }
+  .btn-rouge {
+    @apply btn bg-rouge text-white shadow-plaque hover:bg-rouge-sombre hover:shadow-releve;
+  }
+  .btn-contour {
+    @apply btn border border-plomb-noir/[0.15] bg-white/60 text-plomb-noir
+           hover:border-plomb-noir/[0.35] hover:bg-white;
+  }
+  .btn-clair {
+    @apply btn bg-white text-encre hover:bg-creme;
+  }
+  .btn-petit {
+    @apply rounded-full px-4 py-2 text-sm;
+  }
+
+  /* --- Formulaires ------------------------------------------------------ */
+  .champ {
+    @apply w-full rounded-douce border border-plomb-noir/[0.12] bg-white px-4 py-3
+           text-[0.9375rem] text-plomb-noir placeholder:text-plomb-clair
+           transition duration-200
+           focus:border-encre-vif focus:outline-none focus:ring-4 focus:ring-encre-vif/[0.12];
+  }
+
+  .etiquette {
+    @apply mb-1.5 block text-micro font-medium text-plomb;
+  }
+
+  /* Champ creux : pilule sans bordure, creusee par une ombre interne.
+     Concu pour un fond sombre (texte blanc) - voir la page de connexion. */
+  .champ-creux {
+    @apply w-full rounded-full border-none bg-transparent px-5 py-3
+           text-[1rem] text-white outline-none
+           placeholder:text-white/40
+           transition-shadow duration-200;
+    box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+  }
+  .champ-creux:focus {
+    box-shadow:
+      inset 2px 5px 10px rgb(5, 5, 5),
+      0 0 0 3px rgba(27, 92, 224, 0.45);
+  }
+  /* Chrome repeint le fond des champs auto-remplis : on le neutralise. */
+  .champ-creux:-webkit-autofill,
+  .champ-creux:-webkit-autofill:focus {
+    -webkit-text-fill-color: #fff;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
+  /* --- Loader d'envoi : grille 3x3 qui ondule ------------------------- */
+  /* Les neuf teintes suivent le degrade de marque, du bleu d'encre au cyan
+     d'impression. Pour revenir au vert d'origine, remplacer les neuf valeurs
+     --cell-color par : #00FF87 #0CFD95 #17FBA2 #23F9B2 #30F7C3 #3DF5D4
+     #45F4DE #53F1F0 #60EFFF. */
+  .loader {
+    --cell-size: 24px;
+    --cell-spacing: 2px;
+    --cells: 3;
+    --total-size: calc(var(--cells) * (var(--cell-size) + 2 * var(--cell-spacing)));
+    display: flex;
+    flex-wrap: wrap;
+    width: var(--total-size);
+    height: var(--total-size);
+  }
+
+  .loader-grand {
+    --cell-size: 40px;
+  }
+
+  .cell {
+    flex: 0 0 var(--cell-size);
+    height: var(--cell-size);
+    margin: var(--cell-spacing);
+    background-color: transparent;
+    box-sizing: border-box;
+    border-radius: 4px;
+    animation: 1.5s ripple ease infinite;
+  }
+
+  .cell.d-1 {
+    animation-delay: 100ms;
+  }
+  .cell.d-2 {
+    animation-delay: 200ms;
+  }
+  .cell.d-3 {
+    animation-delay: 300ms;
+  }
+  .cell.d-4 {
+    animation-delay: 400ms;
+  }
+
+  .cell:nth-child(1) {
+    --cell-color: #0b3a8f;
+  }
+  .cell:nth-child(2) {
+    --cell-color: #164cb4;
+  }
+  .cell:nth-child(3) {
+    --cell-color: #1b5ce0;
+  }
+  .cell:nth-child(4) {
+    --cell-color: #2472e6;
+  }
+  .cell:nth-child(5) {
+    --cell-color: #2d88ec;
+  }
+  .cell:nth-child(6) {
+    --cell-color: #379ef2;
+  }
+  .cell:nth-child(7) {
+    --cell-color: #44b4f6;
+  }
+  .cell:nth-child(8) {
+    --cell-color: #52d1fa;
+  }
+  .cell:nth-child(9) {
+    --cell-color: #60efff;
+  }
+
+
+  /* --- Socle d'animation ------------------------------------------------
+     Tout part d'un etat "au repos" pose en CSS ; le composant <Reveal>
+     bascule data-visible="true" quand l'element entre dans l'ecran.
+     Aucune librairie : uniquement des transitions et des keyframes. */
+
+  /* will-change reserve les ressources graphiques : on ne le garde que
+     pendant l'attente, et on le relache une fois l'element revele. */
+  [data-anim] {
+    will-change: transform, opacity;
+  }
+  [data-anim][data-visible="true"] {
+    will-change: auto;
+  }
+
+  /* Glissement vers le haut, le plus courant. */
+  [data-anim="monte"] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 900ms theme("transitionTimingFunction.douce"),
+      transform 900ms theme("transitionTimingFunction.douce");
+  }
+
+  /* Fondu seul, pour les blocs de texte secondaires. */
+  [data-anim="fondu"] {
+    opacity: 0;
+    transition: opacity 1100ms theme("transitionTimingFunction.douce");
+  }
+
+  /* Revelation par volet : l'image se decouvre de bas en haut.
+     Le decoupage porte sur l'ENFANT, jamais sur l'element observe : un
+     element entierement masque par clip-path n'intersecte plus l'ecran, et
+     l'IntersectionObserver ne se declencherait jamais. */
+  [data-anim="volet"] {
+    overflow: hidden;
+  }
+  /* Glissement d'un cache plutot qu'un clip-path anime : le navigateur
+     compose la translation sur le GPU, la decoupe le forcerait a
+     repeindre chaque trame. */
+  [data-anim="volet"] > * {
+    transform: translateY(101%);
+    transition: transform 1100ms theme("transitionTimingFunction.douce");
+  }
+  [data-anim="volet"][data-visible="true"] > * {
+    transform: translateY(0);
+  }
+
+  /* Glissement lateral, pour les colonnes alternees. */
+  [data-anim="cote"] {
+    opacity: 0;
+    transform: translateX(-32px);
+    transition:
+      opacity 900ms theme("transitionTimingFunction.douce"),
+      transform 900ms theme("transitionTimingFunction.douce");
+  }
+  [data-anim="cote-droit"] {
+    opacity: 0;
+    transform: translateX(32px);
+    transition:
+      opacity 900ms theme("transitionTimingFunction.douce"),
+      transform 900ms theme("transitionTimingFunction.douce");
+  }
+
+  /* Agrandissement discret, pour les cartes. */
+  [data-anim="echelle"] {
+    opacity: 0;
+    transform: scale(0.96);
+    transition:
+      opacity 800ms theme("transitionTimingFunction.douce"),
+      transform 800ms theme("transitionTimingFunction.douce");
+  }
+
+  [data-anim][data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Titre compose lettre par lettre. */
+  .lettres > span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.5em) rotate(2deg);
+    animation: lettre 900ms theme("transitionTimingFunction.douce") forwards;
+  }
+
+  /* Filet lumineux qui traverse une surface au survol. */
+  .brillance {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .brillance::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+    transition: transform 900ms theme("transitionTimingFunction.douce");
+    pointer-events: none;
+  }
+  .brillance:hover::after {
+    transform: translateX(120%);
+  }
+
+  /* Soulignement qui se trace sous un lien. */
+  .lien-trait {
+    position: relative;
+  }
+  .lien-trait::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 420ms theme("transitionTimingFunction.douce");
+  }
+  .lien-trait:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Respiration lente, reservee aux halos de fond. */
+  .respire {
+    animation: respire 9s ease-in-out infinite;
+  }
+
+
+  /* --- Admin : entrees et retours visuels ------------------------------ */
+
+  /* Chaque ecran d'administration entre d'un souffle : sans cela, la
+     navigation interne parait sèche. */
+  .entree-admin {
+    animation: monter 520ms theme("transitionTimingFunction.douce") both;
+  }
+
+  /* Cartes de l'admin : leger relevement au survol. */
+  .plaque {
+    transition:
+      box-shadow 320ms theme("transitionTimingFunction.douce"),
+      transform 320ms theme("transitionTimingFunction.douce");
+  }
+
+  /* Lignes de tableau : surlignage progressif. */
+  tbody tr {
+    transition: background-color 220ms ease;
+  }
+
+  /* Champ actif : le libelle prend la couleur d'encre. */
+  label:focus-within > .etiquette {
+    color: theme("colors.encre.vif");
+  }
+
+  /* --- Rythme ----------------------------------------------------------- */
+  .filet {
+    @apply flex items-center gap-4;
+  }
+  .filet::after {
+    content: "";
+    @apply h-px flex-1 bg-plomb-noir/10;
+  }
+}
+
+
+@keyframes lettre {
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes respire {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes flotte {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Animation du loader d'envoi. */
+@keyframes ripple {
+  0% {
+    background-color: transparent;
+  }
+  30% {
+    background-color: var(--cell-color);
+  }
+  60% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@media print {
+  .sans-impression {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    background-image: none;
+  }
+}

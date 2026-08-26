@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img">
+  <defs>
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+  </filter></defs>
+  
+    <rect width="1200" height="900" fill="#0B3A8F"/>
+    <g transform="translate(600 450)">
+      <path transform="rotate(0)" d="M0 -300 L170 -230 L60 -60 Z" fill="#1B5CE0" opacity="0.85"/>
+      <path transform="rotate(45)" d="M0 -300 L170 -230 L60 -60 Z" fill="#0E4BB8" opacity="0.85"/>
+      <path transform="rotate(90)" d="M0 -300 L170 -230 L60 -60 Z" fill="#123E96" opacity="0.85"/>
+      <path transform="rotate(135)" d="M0 -300 L170 -230 L60 -60 Z" fill="#1B5CE0" opacity="0.85"/>
+      <path transform="rotate(180)" d="M0 -300 L170 -230 L60 -60 Z" fill="#0E4BB8" opacity="0.85"/>
+      <path transform="rotate(225)" d="M0 -300 L170 -230 L60 -60 Z" fill="#123E96" opacity="0.85"/>
+      <path transform="rotate(270)" d="M0 -300 L170 -230 L60 -60 Z" fill="#1B5CE0" opacity="0.85"/>
+      <path transform="rotate(315)" d="M0 -300 L170 -230 L60 -60 Z" fill="#0E4BB8" opacity="0.85"/>
+      <circle r="72" fill="#FAF7F0"/>
+      <circle r="42" fill="#D62027"/>
+    </g>
+    <rect x="120" y="120" width="120" height="6" rx="3" fill="#FAF7F0" opacity="0.6"/>
+    <rect x="120" y="120" width="6" height="120" rx="3" fill="#FAF7F0" opacity="0.6"/>
+    <rect x="960" y="774" width="120" height="6" rx="3" fill="#FAF7F0" opacity="0.6"/>
+    <rect x="1074" y="660" width="6" height="120" rx="3" fill="#FAF7F0" opacity="0.6"/>
+  <rect width="1200" height="900" filter="url(#grain)" opacity="0.5"/>
+</svg>

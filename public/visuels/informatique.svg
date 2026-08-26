@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img">
+  <defs>
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+  </filter></defs>
+  
+    <rect width="1200" height="900" fill="#FAF7F0"/>
+    <g stroke="#0B3A8F" stroke-opacity="0.22" stroke-width="2" fill="none">
+      <path d="M240 240 L600 420 L960 240"/>
+      <path d="M240 660 L600 420 L960 660"/>
+      <path d="M240 240 L240 660"/>
+      <path d="M960 240 L960 660"/>
+      <path d="M600 420 L600 700"/>
+    </g>
+    <circle cx="240" cy="240" r="26" fill="#0B3A8F"/>
+    <circle cx="960" cy="240" r="26" fill="#0B3A8F"/>
+    <circle cx="240" cy="660" r="26" fill="#0B3A8F"/>
+    <circle cx="960" cy="660" r="26" fill="#0B3A8F"/>
+    <circle cx="600" cy="700" r="26" fill="#D62027"/>
+    <circle cx="600" cy="420" r="58" fill="#1B5CE0"/>
+    <circle cx="600" cy="420" r="90" fill="none" stroke="#1B5CE0" stroke-opacity="0.3" stroke-width="2"/>
+    <circle cx="600" cy="420" r="130" fill="none" stroke="#1B5CE0" stroke-opacity="0.15" stroke-width="2"/>
+  <rect width="1200" height="900" filter="url(#grain)" opacity="0.5"/>
+</svg>

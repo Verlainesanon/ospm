@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img">
+  <defs>
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+  </filter></defs>
+  
+    <rect width="1200" height="900" fill="#0B3A8F"/>
+    <g opacity="0.9">
+      <circle cx="470" cy="420" r="240" fill="#00AEEF" opacity="0.55"/>
+      <circle cx="620" cy="470" r="240" fill="#EC008C" opacity="0.5"/>
+      <circle cx="560" cy="330" r="240" fill="#FFF200" opacity="0.45"/>
+    </g>
+    <rect x="120" y="700" width="960" height="34" rx="17" fill="#FAF7F0" opacity="0.9"/>
+    <rect x="120" y="748" width="620" height="18" rx="9" fill="#FAF7F0" opacity="0.4"/>
+    <g transform="translate(820 180) rotate(14)">
+      <rect width="280" height="26" rx="13" fill="#D62027"/>
+      <rect y="44" width="180" height="26" rx="13" fill="#FAF7F0" opacity="0.7"/>
+    </g>
+  <rect width="1200" height="900" filter="url(#grain)" opacity="0.5"/>
+</svg>

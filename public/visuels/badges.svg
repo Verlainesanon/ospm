@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img">
+  <defs>
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncA type="linear" slope="0.055"/></feComponentTransfer>
+  </filter></defs>
+  
+    <rect width="1200" height="900" fill="#FAF7F0"/>
+    <g transform="translate(600 450)">
+      <g transform="rotate(-8) translate(-300 -190)">
+        <rect width="600" height="380" rx="28" fill="#0B3A8F" opacity="0.12"/>
+      </g>
+      <g transform="rotate(-3) translate(-290 -175)">
+        <rect width="580" height="360" rx="26" fill="#fff"/>
+        <rect x="40" y="40" width="150" height="150" rx="12" fill="#1B5CE0" opacity="0.16"/>
+        <rect x="220" y="52" width="300" height="22" rx="11" fill="#0B3A8F"/>
+        <rect x="220" y="94" width="210" height="16" rx="8" fill="#0B3A8F" opacity="0.35"/>
+        <rect x="40" y="230" width="480" height="12" rx="6" fill="#0B3A8F" opacity="0.15"/>
+        <rect x="40" y="262" width="360" height="12" rx="6" fill="#0B3A8F" opacity="0.15"/>
+        <rect x="40" y="300" width="480" height="20" rx="10" fill="#D62027" opacity="0.85"/>
+      </g>
+      <g transform="rotate(6) translate(-120 -320)">
+        <rect width="240" height="150" rx="18" fill="url(#holo)"/>
+      </g>
+    </g>
+    <defs>
+      <linearGradient id="holo" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00AEEF"/>
+        <stop offset="45%" stop-color="#EC008C"/>
+        <stop offset="100%" stop-color="#FFF200"/>
+      </linearGradient>
+    </defs>
+  <rect width="1200" height="900" filter="url(#grain)" opacity="0.5"/>
+</svg>

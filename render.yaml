@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: ospm
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ospm-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: OSPM_AGENT_TOKEN
+        generateValue: true
+
+databases:
+  - name: ospm-db
+    plan: free
+    databaseName: ospm
