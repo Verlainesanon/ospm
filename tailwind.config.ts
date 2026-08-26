@@ -12,14 +12,21 @@ const config: Config = {
           DEFAULT: "#0B3A8F",
           vif: "#1B5CE0",
           nuit: "#071F49",
+          profond: "#04122D",
         },
         rouge: {
           DEFAULT: "#D62027",
           sombre: "#A5161C",
         },
+        or: {
+          DEFAULT: "#C5A059",
+          clair: "#E5C88A",
+          sombre: "#967232",
+        },
         creme: {
           DEFAULT: "#FAF7F0",
           fonce: "#EFE9DC",
+          papier: "#F4EFE6",
         },
         plomb: {
           DEFAULT: "#5E636B",

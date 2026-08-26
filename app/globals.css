@@ -123,7 +123,7 @@
     @apply font-mono text-micro text-plomb-clair;
   }
 
-  /* --- Surfaces --------------------------------------------------------- */
+  /* --- Surfaces Premium ------------------------------------------------ */
   .plaque {
     @apply rounded-plaque border border-black/[0.06] bg-white shadow-plaque;
   }
@@ -134,13 +134,24 @@
 
   .carte-lien {
     @apply plaque overflow-hidden transition duration-300 ease-douce
-           hover:-translate-y-1 hover:shadow-releve;
+           hover:-translate-y-1.5 hover:shadow-releve;
+  }
+
+  .carte-premium {
+    @apply relative overflow-hidden rounded-plaque border border-black/[0.08] bg-white p-1
+           shadow-plaque transition duration-300 ease-douce
+           hover:-translate-y-1.5 hover:border-or/40 hover:shadow-releve;
+  }
+
+  .badge-authentique {
+    @apply inline-flex items-center gap-2 rounded-full border border-or/30 bg-or/10 px-4 py-1.5
+           text-micro font-medium uppercase tracking-[0.08em] text-or-sombre backdrop-blur-md;
   }
 
   /* --- Boutons ---------------------------------------------------------- */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5
-           text-[0.9375rem] font-medium transition duration-200 ease-douce;
+    @apply inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5
+           text-[0.9375rem] font-medium transition duration-300 ease-douce active:scale-[0.98];
   }
   .btn-encre {
     @apply btn bg-encre text-white shadow-plaque hover:bg-encre-vif hover:shadow-releve;
@@ -148,15 +159,18 @@
   .btn-rouge {
     @apply btn bg-rouge text-white shadow-plaque hover:bg-rouge-sombre hover:shadow-releve;
   }
+  .btn-or {
+    @apply btn bg-gradient-to-r from-or-sombre via-or to-or-clair text-encre-nuit font-semibold shadow-plaque hover:brightness-110 hover:shadow-releve;
+  }
   .btn-contour {
-    @apply btn border border-plomb-noir/[0.15] bg-white/60 text-plomb-noir
-           hover:border-plomb-noir/[0.35] hover:bg-white;
+    @apply btn border border-plomb-noir/[0.15] bg-white/80 text-plomb-noir backdrop-blur-sm
+           hover:border-encre/40 hover:bg-white hover:text-encre;
   }
   .btn-clair {
-    @apply btn bg-white text-encre hover:bg-creme;
+    @apply btn bg-white text-encre shadow-sm hover:bg-creme hover:text-encre-vif;
   }
   .btn-petit {
-    @apply rounded-full px-4 py-2 text-sm;
+    @apply rounded-full px-4.5 py-2 text-sm;
   }
 
   /* --- Formulaires ------------------------------------------------------ */

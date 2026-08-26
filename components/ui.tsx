@@ -119,7 +119,6 @@ export function Bouton({
   );
 }
 
-// Encadre "bon de travail" : la fiche papier de l'atelier, en plus soigne.
 export function BonDeTravail({
   reference,
   lignes,
@@ -128,21 +127,27 @@ export function BonDeTravail({
   lignes: { label: string; valeur: string }[];
 }) {
   return (
-    <div className="plaque w-full max-w-sm p-7">
+    <div className="relative overflow-hidden rounded-plaque border border-or/30 bg-white p-7 shadow-releve">
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-encre via-or to-rouge" />
       <div className="mb-5 flex items-center justify-between border-b border-plomb-noir/[0.08] pb-4">
-        <span className="text-micro font-medium uppercase tracking-[0.08em] text-plomb">
-          Bon de travail
+        <span className="inline-flex items-center gap-1.5 text-micro font-medium uppercase tracking-[0.1em] text-encre">
+          <span className="h-1.5 w-1.5 rounded-full bg-or" />
+          Fiche d&apos;Atelier Officielle
         </span>
-        <span className="ref text-rouge">{reference}</span>
+        <span className="ref rounded bg-rouge/10 px-2 py-0.5 font-mono text-rouge font-semibold">{reference}</span>
       </div>
       <dl className="space-y-3.5">
         {lignes.map((l) => (
-          <div key={l.label} className="flex items-baseline justify-between gap-5">
+          <div key={l.label} className="flex items-baseline justify-between gap-5 border-b border-dashed border-plomb-noir/[0.06] pb-2 last:border-b-0">
             <dt className="text-micro text-plomb">{l.label}</dt>
-            <dd className="text-right text-[0.9375rem] font-medium text-plomb-noir">{l.valeur}</dd>
+            <dd className="text-right text-[0.9375rem] font-semibold text-plomb-noir">{l.valeur}</dd>
           </div>
         ))}
       </dl>
+      <div className="mt-5 flex items-center justify-between text-micro text-plomb-clair pt-2">
+        <span>Sceau d&apos;Impression OSPM</span>
+        <span className="font-mono">✓ 100% Validé</span>
+      </div>
     </div>
   );
 }
