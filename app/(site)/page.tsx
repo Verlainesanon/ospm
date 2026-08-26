@@ -32,9 +32,27 @@ const ETAPES = [
   },
 ];
 
+interface ServiceItem {
+  id: string;
+  nom: string;
+  slug?: string;
+}
+
+interface CategorieAvecServices {
+  id: string;
+  slug: string;
+  nom: string;
+  icone: string;
+  description: string;
+  couleur: string;
+  ordre: number;
+  visible: boolean;
+  services: ServiceItem[];
+}
+
 export default async function Accueil() {
   const r = await getReglages();
-  let categories: any[] = [];
+  let categories: CategorieAvecServices[] = [];
   let realisations: any[] = [];
 
   try {
@@ -224,7 +242,7 @@ export default async function Accueil() {
                 <h3 className="text-sous">{c.nom}</h3>
                 <p className="mt-3 text-[0.9375rem] leading-relaxed text-plomb">{c.description}</p>
                 <ul className="mt-5 flex flex-wrap gap-2">
-                  {c.services.slice(0, 3).map((s) => (
+                  {c.services.slice(0, 3).map((s: ServiceItem) => (
                     <li key={s.id} className="rounded-full bg-creme px-3 py-1 text-micro text-plomb">
                       {s.nom}
                     </li>
