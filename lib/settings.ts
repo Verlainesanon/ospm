@@ -5,8 +5,13 @@ export type Reglages = Record<string, string>;
 // Les parametres sont peu nombreux et lus sur presque chaque page : une seule
 // requete, remise a plat en objet cle/valeur.
 export async function getReglages(): Promise<Reglages> {
-  const lignes = await prisma.siteSetting.findMany();
-  return Object.fromEntries(lignes.map((l) => [l.key, l.value]));
+  try {
+    const lignes = await prisma.siteSetting.findMany();
+    return Object.fromEntries(lignes.map((l) => [l.key, l.value]));
+  } catch (error) {
+    console.error("Erreur lors de la lecture des reglages:", error);
+    return {};
+  }
 }
 
 export function reglage(r: Reglages, cle: string, defaut = ""): string {

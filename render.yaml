@@ -5,7 +5,7 @@ services:
     plan: free
     region: frankfurt
     buildCommand: npm ci && npm run build
-    startCommand: npx prisma db push && npm run db:seed && npm run start
+    startCommand: npx prisma db push --accept-data-loss && npm run db:seed && npm run start
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION

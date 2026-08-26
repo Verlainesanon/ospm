@@ -34,14 +34,21 @@ const ETAPES = [
 
 export default async function Accueil() {
   const r = await getReglages();
-  const [categories, realisations] = await Promise.all([
-    prisma.serviceCategory.findMany({
-      where: { visible: true },
-      orderBy: { ordre: "asc" },
-      include: { services: { where: { visible: true }, orderBy: { ordre: "asc" }, take: 4 } },
-    }),
-    prisma.galleryItem.findMany({ where: { visible: true }, orderBy: { ordre: "asc" }, take: 6 }),
-  ]);
+  let categories: any[] = [];
+  let realisations: any[] = [];
+
+  try {
+    [categories, realisations] = await Promise.all([
+      prisma.serviceCategory.findMany({
+        where: { visible: true },
+        orderBy: { ordre: "asc" },
+        include: { services: { where: { visible: true }, orderBy: { ordre: "asc" }, take: 4 } },
+      }),
+      prisma.galleryItem.findMany({ where: { visible: true }, orderBy: { ordre: "asc" }, take: 6 }),
+    ]);
+  } catch (e) {
+    console.error("Erreur chargement donnees accueil BDD:", e);
+  }
 
   const wa = numeroWhatsapp(reglage(r, "contact.whatsapp1", "+50942712891"));
   const vitrine =

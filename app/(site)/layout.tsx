@@ -18,11 +18,16 @@ const LIENS = [
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const r = await getReglages();
-  const categories = await prisma.serviceCategory.findMany({
-    where: { visible: true },
-    orderBy: { ordre: "asc" },
-    select: { slug: true, nom: true },
-  });
+  let categories: { slug: string; nom: string }[] = [];
+  try {
+    categories = await prisma.serviceCategory.findMany({
+      where: { visible: true },
+      orderBy: { ordre: "asc" },
+      select: { slug: true, nom: true },
+    });
+  } catch (e) {
+    console.error("Erreur chargement categories layout:", e);
+  }
   const wa = numeroWhatsapp(reglage(r, "contact.whatsapp1", "+50942712891"));
 
   return (
