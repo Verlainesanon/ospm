@@ -4,13 +4,9 @@ services:
     runtime: node
     plan: free
     region: frankfurt
-    buildCommand: npm ci && npx prisma migrate deploy && npm run build
-    startCommand: npm run start
+    buildCommand: npm ci && npm run build
+    startCommand: npx prisma migrate deploy && npm run start
     healthCheckPath: /
-    disk:
-      name: uploads
-      mountPath: /public/uploads
-      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: "20"
@@ -22,11 +18,6 @@ services:
         generateValue: true
       - key: OSPM_AGENT_TOKEN
         generateValue: true
-      - key: OSPM_URL
-        fromService:
-          name: ospm
-          type: web
-          property: host
 
 databases:
   - name: ospm-db
