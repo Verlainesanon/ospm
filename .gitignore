@@ -4,3 +4,8 @@ node_modules
 public/uploads/*
 !public/uploads/.gitkeep
 tsconfig.tsbuildinfo
+
+# Fichiers IA & mémoires locaux (gardés sur le PC, exclus de GitHub)
+CLAUDE.md
+HOMIE-MEMOIRE.md
+CV-PROJET-OSPM*.md
