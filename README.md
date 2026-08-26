@@ -2,7 +2,7 @@
 
 Site public + back-office complet pour l'atelier OSPM (60, Rue Dessalines, Petit-Goâve).
 
-**Stack** : Next.js 14 (App Router) · Prisma · PostgreSQL · Tailwind · vitest.
+**Stack** : Next.js 14 (App Router) · Prisma · PostgreSQL · Tailwind · Vitest.
 
 ---
 
@@ -10,14 +10,23 @@ Site public + back-office complet pour l'atelier OSPM (60, Rue Dessalines, Petit
 
 ```bash
 # 1. Base de données (Docker)
-docker start ospm-postgres     # ou : docker run -d --name ospm-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=ospm -p 5432:5432 -v ospm-pgdata:/var/lib/postgresql/data postgres:16
+docker run -d --name ospm-postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=ospm \
+  -p 5432:5432 \
+  -v ospm-pgdata:/var/lib/postgresql/data \
+  postgres:16
 
-# 2. Dépendances, schéma, données de départ
+# 2. Variables d'environnement
+cp .env.example .env
+# → Éditez .env et renseignez DATABASE_URL, SESSION_SECRET, etc.
+
+# 3. Dépendances, schéma, données de départ
 npm install
 npm run db:push
 npm run db:seed
 
-# 3. Lancer
+# 4. Lancer
 npm run dev      # http://localhost:3000
 ```
 
@@ -28,6 +37,42 @@ Comptes créés par le seed — **à changer avant toute mise en ligne** :
 | admin@ospm.ht | admin123 | ADMIN |
 | gestion@ospm.ht | gestion123 | GESTIONNAIRE |
 | caisse@ospm.ht | caisse123 | CAISSIER |
+
+---
+
+## Déploiement sur Render
+
+### 1. Créer le dépôt et le connecter
+
+Connectez votre dépôt GitHub sur [render.com](https://render.com).
+Le fichier `render.yaml` déclare automatiquement :
+- un **service web** Node.js (plan gratuit)
+- une **base de données PostgreSQL 16** (plan gratuit)
+
+Render injecte `DATABASE_URL` automatiquement depuis la base liée.
+
+### 2. Variables d'environnement à définir manuellement
+
+Dans le tableau de bord Render → votre service → **Environment** :
+
+| Variable | Valeur |
+|---|---|
+| `OSPM_URL` | `https://votre-service.onrender.com` (après le 1er déploiement) |
+
+`SESSION_SECRET` et `OSPM_AGENT_TOKEN` sont générés automatiquement par `render.yaml`.
+
+### 3. Après le premier déploiement
+
+Dans le **Shell** de Render (onglet "Shell") :
+
+```bash
+npx prisma migrate deploy   # ou : npm run db:push
+npm run db:seed
+```
+
+> ⚠️ **Changez les mots de passe par défaut** immédiatement après le seed dans `/admin/utilisateurs`.
+
+---
 
 ## Structure
 
@@ -58,29 +103,9 @@ Deux chemins, tous les deux pilotés depuis `/admin/impression` :
 2. **Agent local (thermique)** — un ticket est mis en file, puis :
 
 ```bash
-set OSPM_URL=http://localhost:3000
-set OSPM_AGENT_TOKEN=le-jeton-du-.env
+set OSPM_URL=https://votre-service.onrender.com
+set OSPM_AGENT_TOKEN=le-jeton-du-tableau-bord-render
 node agent/agent-impression.mjs
-```
-
-L'agent interroge `/api/impression` toutes les 5 s. Cible d'imprimante acceptée : `192.168.1.50:9100` (réseau) ou un nom de partage / port Windows (`\\PC\TICKET`, `USB001`).
-
-Les gabarits (facture A4, reçu 80 mm, badge) sont modifiables dans l'admin, champs `{{numero}}`, `{{client}}`, `{{lignes}}`, `{{total}}`…
-
-## Finance
-
-- Facture / proforma / reçu, numérotation `FAC-2026-0001` par année.
-- Chaque paiement saisi crée automatiquement une entrée de caisse ; chaque dépense en espèces crée une sortie.
-- Caisse par session : ouverture avec fond, clôture avec solde calculé.
-- Stock avec seuil d'alerte, mouvements tracés, consommables rattachés aux équipements.
-
-## Déploiement (Render)
-
-`render.yaml` déclare le service web et la base. Après le premier déploiement :
-
-```bash
-npx prisma migrate deploy   # ou npm run db:push
-npm run db:seed
 ```
 
 ## Tests
