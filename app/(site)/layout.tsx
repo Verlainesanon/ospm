@@ -7,26 +7,43 @@ import { EcranChargement } from "@/components/ecran-chargement";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CurseurCalage } from "@/components/curseur-calage";
 import { LumiereAtelier } from "@/components/lumiere-atelier";
+import {
+  IconeServices,
+  IconeGalerie,
+  IconeBoutique,
+  IconeContact,
+  IconeDevis,
+  IconeAtelier,
+} from "@/components/icones";
 
 // Tout le site public lit la base (contenu editable depuis l'admin) : rendu a
 // la demande, jamais fige au build.
 export const dynamic = "force-dynamic";
 
+// `icone` est une cle, pas un composant : ces liens traversent la frontiere
+// serveur -> client (MenuMobile), et React n'y laisse pas passer de fonction.
 const LIENS = [
-  { href: "/services", label: "Services" },
-  { href: "/galerie", label: "Realisations" },
-  { href: "/boutique", label: "Boutique" },
-  { href: "/contact", label: "Contact" },
+  { href: "/services", label: "Services", icone: "services" as const },
+  { href: "/galerie", label: "Réalisations", icone: "galerie" as const },
+  { href: "/boutique", label: "Boutique", icone: "boutique" as const },
+  { href: "/contact", label: "Contact", icone: "contact" as const },
 ];
+
+const ICONES_NAV = {
+  services: IconeServices,
+  galerie: IconeGalerie,
+  boutique: IconeBoutique,
+  contact: IconeContact,
+};
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const r = await getReglages();
-  let categories: { slug: string; nom: string }[] = [];
+  let categories: { slug: string; nom: string; icone: string }[] = [];
   try {
     categories = await prisma.serviceCategory.findMany({
       where: { visible: true },
       orderBy: { ordre: "asc" },
-      select: { slug: true, nom: true },
+      select: { slug: true, nom: true, icone: true },
     });
   } catch (e) {
     console.error("Erreur chargement categories layout:", e);
@@ -49,16 +66,24 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           </Link>
 
           <nav className="hidden items-center gap-9 md:flex">
-            {LIENS.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className="text-[0.9375rem] text-plomb transition-colors hover:text-plomb-noir"
-              >
-                {l.label}
-              </Link>
-            ))}
+            {LIENS.map((l) => {
+              const Icone = ICONES_NAV[l.icone];
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="group inline-flex items-center gap-2 text-[0.9375rem] text-plomb transition-colors hover:text-encre"
+                >
+                  <Icone
+                    taille={17}
+                    className="text-plomb-clair transition-colors group-hover:text-encre"
+                  />
+                  {l.label}
+                </Link>
+              );
+            })}
             <Link href="/devis" className="btn-encre btn-petit">
+              <IconeDevis taille={16} />
               Demander un devis
             </Link>
             <ThemeToggle />
@@ -99,8 +124,13 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
                   <li key={c.slug} className="border-b border-plomb-noir/10 last:border-b-0">
                     <Link
                       href={`/services/${c.slug}`}
-                      className="block py-2.5 text-[0.9375rem] text-plomb transition-colors hover:text-encre"
+                      className="group flex items-center gap-2.5 py-2.5 text-[0.9375rem] text-plomb transition-colors hover:text-encre"
                     >
+                      <IconeAtelier
+                        nom={c.icone}
+                        taille={16}
+                        className="text-plomb-clair transition-colors group-hover:text-encre"
+                      />
                       {c.nom}
                     </Link>
                   </li>

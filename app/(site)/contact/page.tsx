@@ -3,6 +3,7 @@ import { Section, Repere } from "@/components/ui";
 import { Reveal, Magnetique } from "@/components/anim";
 import { TitrePresse } from "@/components/titre-presse";
 import { LigneCommande } from "@/components/ligne-commande";
+import { IconeWhatsApp, IconeCourriel } from "@/components/icones";
 import { FormulaireContact } from "./formulaire";
 
 export const metadata = { title: "Contact" };
@@ -60,12 +61,14 @@ export default async function Contact() {
               href={`https://wa.me/${numeroWhatsapp(wa1)}`}
               target="_blank"
               rel="noreferrer"
-              className="btn-rouge"
+              className="btn-whatsapp"
             >
+              <IconeWhatsApp taille={17} />
               WhatsApp {wa1}
             </a>
             <a href={`mailto:${reglage(r, "contact.email")}`} className="btn-contour">
-              Ecrire un e-mail
+              <IconeCourriel taille={17} />
+              Écrire un e-mail
             </a>
           </Reveal>
 

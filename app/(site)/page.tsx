@@ -10,6 +10,7 @@ import { TitrePresse } from "@/components/titre-presse";
 import { Plaque3D } from "@/components/plaque-3d";
 import { LigneCommande } from "@/components/ligne-commande";
 import { SceauAtelier } from "@/components/sceau-atelier";
+import { IconeWhatsApp, IconeAtelier } from "@/components/icones";
 
 // Une encre process par atelier. Le ruban CMJN du logo devient la cle de
 // lecture du site : chaque atelier a sa plaque, comme sur une presse.
@@ -145,8 +146,9 @@ export default async function Accueil() {
                   href={`https://wa.me/${wa}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-contour"
+                  className="btn-whatsapp"
                 >
+                  <IconeWhatsApp taille={17} />
                   Écrire sur WhatsApp
                 </a>
               </div>
@@ -215,8 +217,11 @@ export default async function Accueil() {
                   href={`/services/${c.slug}`}
                   className="grid items-center gap-8 py-10 lg:grid-cols-[4rem_1fr_24rem] lg:py-12"
                 >
-                  <span className={`font-mono text-micro tracking-[0.14em] ${encre.texte}`}>
-                    {String(i + 1).padStart(2, "0")}
+                  <span className={`flex flex-col items-start gap-3 ${encre.texte}`}>
+                    <IconeAtelier nom={c.icone} taille={26} />
+                    <span className="font-mono text-micro tracking-[0.14em]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                   </span>
 
                   <div className="max-w-xl">
@@ -399,8 +404,9 @@ export default async function Accueil() {
                   href={`https://wa.me/${wa}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn-rouge"
+                  className="btn-whatsapp"
                 >
+                  <IconeWhatsApp taille={17} />
                   WhatsApp direct
                 </a>
               </div>

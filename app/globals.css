@@ -295,6 +295,23 @@
   .btn-clair {
     @apply btn bg-carte text-encre hover:bg-creme-fonce;
   }
+  /* WhatsApp garde son vert de marque : c'est a ce vert-la qu'on reconnait le
+     bouton avant meme de lire le libelle. Un ton plus profond en chambre noire,
+     ou le vert vif de plein jour eblouit. Le libelle reste sur le noir riche —
+     du blanc sur ce vert ne passe aucun seuil de contraste. */
+  .btn-whatsapp {
+    @apply btn text-[#0A0D11];
+    background: #25d366;
+  }
+  .btn-whatsapp:hover {
+    background: #1fbe5b;
+  }
+  .dark .btn-whatsapp {
+    background: #1ebe5d;
+  }
+  .dark .btn-whatsapp:hover {
+    background: #25d366;
+  }
   .btn-petit {
     @apply px-4 py-1.5 text-sm;
     clip-path: polygon(0 0, calc(100% - 0.7em) 0, 100% 0.7em, 100% 100%, 0 100%);

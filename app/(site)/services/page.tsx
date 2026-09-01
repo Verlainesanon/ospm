@@ -8,6 +8,7 @@ import { Reveal } from "@/components/anim";
 import { TitrePresse } from "@/components/titre-presse";
 import { LigneCommande } from "@/components/ligne-commande";
 import { Plaque3D } from "@/components/plaque-3d";
+import { IconeAtelier } from "@/components/icones";
 
 export const metadata = { title: "Services" };
 
@@ -94,8 +95,11 @@ export default async function Services() {
 
               <div className={imageADroite ? "lg:order-1" : ""}>
                 <Reveal effet="monte">
-                  <span className={`font-mono text-micro tracking-[0.14em] ${encre.texte}`}>
-                    {String(index + 1).padStart(2, "0")}
+                  <span className={`inline-flex items-center gap-3 ${encre.texte}`}>
+                    <IconeAtelier nom={c.icone} taille={24} />
+                    <span className="font-mono text-micro tracking-[0.14em]">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </span>
                   <h2 className="mt-3 text-titre">{c.nom}</h2>
                   <p className="mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-plomb">

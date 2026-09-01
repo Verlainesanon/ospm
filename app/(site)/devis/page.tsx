@@ -4,6 +4,7 @@ import { Section, BonDeTravail } from "@/components/ui";
 import { Reveal } from "@/components/anim";
 import { TitrePresse } from "@/components/titre-presse";
 import { LigneCommande } from "@/components/ligne-commande";
+import { IconeWhatsApp } from "@/components/icones";
 import { FormulaireDevis } from "./formulaire";
 
 export const metadata = { title: "Demander un devis" };
@@ -78,8 +79,9 @@ export default async function Devis({
               href={`https://wa.me/${wa}`}
               target="_blank"
               rel="noreferrer"
-              className="btn-rouge mt-4 w-full"
+              className="btn-whatsapp mt-4 w-full"
             >
+              <IconeWhatsApp taille={17} />
               {reglage(r, "contact.whatsapp1")}
             </a>
           </div>
