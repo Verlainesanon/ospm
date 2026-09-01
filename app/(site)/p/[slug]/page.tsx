@@ -4,12 +4,21 @@ import { Section, Eyebrow } from "@/components/ui";
 import { Reveal } from "@/components/anim";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const page = await prisma.page.findUnique({ where: { slug: params.slug } });
-  return { title: page?.titre ?? "Page", description: page?.metaDesc ?? undefined };
+  try {
+    const page = await prisma.page.findUnique({ where: { slug: params.slug } });
+    return { title: page?.titre ?? "Page", description: page?.metaDesc ?? undefined };
+  } catch {
+    return { title: "Page" };
+  }
 }
 
 export default async function PageEditoriale({ params }: { params: { slug: string } }) {
-  const page = await prisma.page.findUnique({ where: { slug: params.slug } });
+  let page = null;
+  try {
+    page = await prisma.page.findUnique({ where: { slug: params.slug } });
+  } catch (e) {
+    console.error("Erreur chargement page editoriale:", e);
+  }
   if (!page || !page.publiee) notFound();
 
   return (

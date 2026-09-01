@@ -13,14 +13,19 @@ export default async function Devis({
 }: {
   searchParams: { service?: string };
 }) {
-  const [services, r] = await Promise.all([
-    prisma.service.findMany({
+  // Le formulaire doit rester joignable meme si la liste des services ne
+  // charge pas : c'est la page qui rapporte les commandes.
+  let services: { slug: string; nom: string; categorie: { nom: string } }[] = [];
+  try {
+    services = await prisma.service.findMany({
       where: { visible: true },
       orderBy: [{ categorie: { ordre: "asc" } }, { ordre: "asc" }],
       select: { slug: true, nom: true, categorie: { select: { nom: true } } },
-    }),
-    getReglages(),
-  ]);
+    });
+  } catch (e) {
+    console.error("Erreur chargement services devis:", e);
+  }
+  const r = await getReglages();
 
   const wa = numeroWhatsapp(reglage(r, "contact.whatsapp1", "+50942712891"));
 

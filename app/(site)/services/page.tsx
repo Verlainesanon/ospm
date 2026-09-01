@@ -19,12 +19,23 @@ const ENCRES = [
   { texte: "text-or", fond: "bg-or", bord: "border-or" },
 ] as const;
 
-export default async function Services() {
-  const categories = await prisma.serviceCategory.findMany({
+type CategorieAvecServices = Awaited<ReturnType<typeof chargerCategories>>[number];
+
+async function chargerCategories() {
+  return prisma.serviceCategory.findMany({
     where: { visible: true },
     orderBy: { ordre: "asc" },
     include: { services: { where: { visible: true }, orderBy: { ordre: "asc" } } },
   });
+}
+
+export default async function Services() {
+  let categories: CategorieAvecServices[] = [];
+  try {
+    categories = await chargerCategories();
+  } catch (e) {
+    console.error("Erreur chargement categories services:", e);
+  }
 
   return (
     <>

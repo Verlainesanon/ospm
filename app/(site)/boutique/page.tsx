@@ -9,12 +9,21 @@ import { Boutique } from "./boutique";
 
 export const metadata = { title: "Boutique" };
 
-export default async function PageBoutique() {
-  const services = await prisma.service.findMany({
+async function chargerServices() {
+  return prisma.service.findMany({
     where: { visible: true, vendableEnLigne: true },
     orderBy: [{ categorie: { ordre: "asc" } }, { ordre: "asc" }],
     include: { categorie: { select: { nom: true } } },
   });
+}
+
+export default async function PageBoutique() {
+  let services: Awaited<ReturnType<typeof chargerServices>> = [];
+  try {
+    services = await chargerServices();
+  } catch (e) {
+    console.error("Erreur chargement boutique:", e);
+  }
 
   const articles = services.map((s) => ({
     slug: s.slug,

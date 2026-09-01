@@ -14,21 +14,32 @@ import { LigneCommande } from "@/components/ligne-commande";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const c = await prisma.serviceCategory.findUnique({ where: { slug: params.slug } });
-  return { title: c?.nom ?? "Service" };
+  try {
+    const c = await prisma.serviceCategory.findUnique({ where: { slug: params.slug } });
+    return { title: c?.nom ?? "Service" };
+  } catch {
+    return { title: "Service" };
+  }
 }
 
 export default async function CategorieService({ params }: { params: { slug: string } }) {
-  const categorie = await prisma.serviceCategory.findUnique({
-    where: { slug: params.slug },
-    include: {
-      services: {
-        where: { visible: true },
-        orderBy: { ordre: "asc" },
-        include: { options: { orderBy: { ordre: "asc" } } },
+  // Une base injoignable ne doit pas renvoyer une 500 : on retombe sur la
+  // page « introuvable », qui reste navigable.
+  let categorie = null;
+  try {
+    categorie = await prisma.serviceCategory.findUnique({
+      where: { slug: params.slug },
+      include: {
+        services: {
+          where: { visible: true },
+          orderBy: { ordre: "asc" },
+          include: { options: { orderBy: { ordre: "asc" } } },
+        },
       },
-    },
-  });
+    });
+  } catch (e) {
+    console.error("Erreur chargement atelier:", e);
+  }
 
   if (!categorie || !categorie.visible) notFound();
 

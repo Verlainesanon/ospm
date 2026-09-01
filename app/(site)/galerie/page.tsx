@@ -10,10 +10,15 @@ import { LigneCommande } from "@/components/ligne-commande";
 export const metadata = { title: "Realisations" };
 
 export default async function Galerie() {
-  const items = await prisma.galleryItem.findMany({
-    where: { visible: true },
-    orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
-  });
+  let items: Awaited<ReturnType<typeof prisma.galleryItem.findMany>> = [];
+  try {
+    items = await prisma.galleryItem.findMany({
+      where: { visible: true },
+      orderBy: [{ ordre: "asc" }, { createdAt: "desc" }],
+    });
+  } catch (e) {
+    console.error("Erreur chargement galerie:", e);
+  }
 
   return (
     <Section>
