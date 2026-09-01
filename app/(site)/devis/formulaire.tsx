@@ -136,7 +136,7 @@ export function FormulaireDevis({
           type="file"
           multiple
           accept="image/*,application/pdf,.ai,.eps"
-          className="champ file:mr-4 file:rounded-plaque file:border-0 file:bg-encre file:px-4 file:py-2 file:font-mono file:text-micro file:uppercase file:text-creme"
+          className="champ file:mr-4 file:rounded-plaque file:border-0 file:bg-encre file:px-4 file:py-2 file:font-mono file:text-micro file:uppercase file:text-[#0A0D11]"
         />
       </div>
 

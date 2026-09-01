@@ -1,7 +1,9 @@
 import { prisma } from "@/lib/db";
 import { getReglages, reglage, numeroWhatsapp } from "@/lib/settings";
-import { Eyebrow, Section, BonDeTravail } from "@/components/ui";
-import { Reveal, Lettres } from "@/components/anim";
+import { Section, BonDeTravail } from "@/components/ui";
+import { Reveal } from "@/components/anim";
+import { TitrePresse } from "@/components/titre-presse";
+import { LigneCommande } from "@/components/ligne-commande";
 import { FormulaireDevis } from "./formulaire";
 
 export const metadata = { title: "Demander un devis" };
@@ -27,12 +29,12 @@ export default async function Devis({
       <div className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:items-start">
         <div>
           <Reveal effet="fondu">
-            <Eyebrow>Devis gratuit</Eyebrow>
+            <LigneCommande texte="devis --nouveau" vitesse={42} delai={200} />
           </Reveal>
-          <h1 className="mt-6 text-affiche">
-            <Lettres texte="Dites-nous ce" depart={120} pas={26} />
+          <h1 className="mt-7 text-enseigne">
+            <TitrePresse texte="Dites-nous ce" depart={120} pas={26} />
             <br />
-            <Lettres texte="qu'il faut imprimer" depart={420} pas={26} />
+            <TitrePresse texte="qu'il faut imprimer" depart={420} pas={26} />
           </h1>
           <p className="mt-6 max-w-xl text-plomb">
             Plus la description est precise, plus le prix qu'on vous donne est juste. Joignez

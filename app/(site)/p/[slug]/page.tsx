@@ -15,7 +15,7 @@ export default async function PageEditoriale({ params }: { params: { slug: strin
   return (
     <Section>
       <Eyebrow>OSPM</Eyebrow>
-      <h1 className="mt-6 max-w-3xl text-affiche">
+      <h1 className="mt-7 max-w-4xl text-enseigne">
         {page.titre}
       </h1>
       <div className="mt-8 max-w-2xl space-y-4 text-plomb">

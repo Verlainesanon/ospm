@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { toNumber } from "@/lib/money";
-import { Eyebrow, Section } from "@/components/ui";
-import { Reveal, Lettres } from "@/components/anim";
+import { Section } from "@/components/ui";
+import { Reveal } from "@/components/anim";
+import { TitrePresse } from "@/components/titre-presse";
+import { LigneCommande } from "@/components/ligne-commande";
 import { Boutique } from "./boutique";
 
 export const metadata = { title: "Boutique" };
@@ -28,10 +30,10 @@ export default async function PageBoutique() {
   return (
     <Section>
       <Reveal effet="fondu">
-        <Eyebrow>Commande en ligne</Eyebrow>
+        <LigneCommande texte="boutique --en-ligne" vitesse={42} delai={200} />
       </Reveal>
-      <h1 className="mt-6 text-affiche">
-        <Lettres texte="Boutique" depart={140} pas={44} />
+      <h1 className="mt-7 text-enseigne">
+        <TitrePresse texte="Boutique" depart={140} pas={44} />
       </h1>
       <p className="mt-6 max-w-2xl text-plomb">
         Les travaux a prix fixe se commandent directement ici. Pour tout le reste, passez par

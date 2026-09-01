@@ -3,17 +3,85 @@
 @tailwind utilities;
 
 @layer base {
+  /* --- Nuancier quadri -------------------------------------------------
+     Les trois encres process gardent leurs valeurs reelles dans les deux
+     themes : une encre ne change pas de teinte selon l'eclairage de l'atelier.
+     Seules les variantes "sombre" s'assombrissent pour rester lisibles sur
+     papier clair. Les neutres, eux, s'inversent. */
+
   :root {
     color-scheme: light;
+    /* Mode clair — le papier. Secondaire : le site s'ouvre en sombre. */
+    --c-surface: 242 239 233; /* papier */
+    --c-surface-2: 232 228 220;
+    --c-card: 250 248 244;
+    /* Valeurs calculees pour tenir le seuil AA (4.5:1) sur le papier ET sur la
+       surface secondaire. Les gris precedents tombaient a 2.4:1 — lisibles a
+       l'oeil d'un graphiste sur bon ecran, illisibles en plein jour sur un
+       telephone d'entree de gamme. */
+    --c-text-strong: 10 13 17;
+    --c-text-muted: 70 78 90;
+    --c-text-faint: 95 102 114;
+    --c-filet: 10 13 17; /* teinte des filets, opacite appliquee a l'usage */
+    --c-filet-opacite: 0.14;
+
+    --i-cyan: 0 110 155; /* cyan assombri : #00AEEF est illisible sur papier */
+    --i-cyan-vif: 0 174 239;
+    --i-magenta: 194 0 115;
+    --i-magenta-sombre: 150 0 89;
+    --i-jaune: 110 102 0; /* ocre : le jaune pur ne tient pas sur du clair */
+    --i-jaune-clair: 150 139 0;
+    --i-jaune-sombre: 84 78 0;
+  }
+
+  .dark {
+    color-scheme: dark;
+    /* Mode sombre — la chambre noire. Noir riche : un noir d'impression
+       porte une sous-couche cyan, il n'est jamais neutre. */
+    --c-surface: 10 13 17; /* #0A0D11 */
+    --c-surface-2: 18 22 28; /* #12161C */
+    --c-card: 26 32 41; /* #1A2029 */
+    --c-text-strong: 242 239 233; /* #F2EFE9 papier, jamais blanc pur */
+    --c-text-muted: 154 163 175;
+    --c-text-faint: 93 102 116;
+    --c-filet: 242 239 233;
+    --c-filet-opacite: 0.12;
+
+    --i-cyan: 0 174 239; /* #00AEEF */
+    --i-cyan-vif: 92 205 255;
+    --i-magenta: 236 0 140; /* #EC008C */
+    --i-magenta-sombre: 190 0 112;
+    --i-jaune: 255 242 0; /* #FFF200 */
+    --i-jaune-clair: 255 248 122;
+    --i-jaune-sombre: 214 203 0;
+  }
+
+  /* Zone toujours sombre (pied de page, panneaux d'appel, voile d'ouverture) :
+     on epingle les neutres a leurs valeurs sombres quel que soit le theme,
+     pour que text-creme / text-plomb continuent de rendre clair par-dessus. */
+  .zone-sombre {
+    --c-surface: 10 13 17;
+    --c-surface-2: 18 22 28;
+    --c-card: 26 32 41;
+    --c-text-strong: 242 239 233;
+    --c-text-muted: 154 163 175;
+    --c-text-faint: 93 102 116;
+    --c-filet: 242 239 233;
+    --c-filet-opacite: 0.12;
+
+    --i-cyan: 0 174 239;
+    --i-cyan-vif: 92 205 255;
+    --i-magenta: 236 0 140;
+    --i-magenta-sombre: 190 0 112;
+    --i-jaune: 255 242 0;
+    --i-jaune-clair: 255 248 122;
+    --i-jaune-sombre: 214 203 0;
   }
 
   body {
     @apply bg-creme text-plomb-noir font-sans antialiased;
-    /* Deux voiles tres faibles : de la matiere, pas un degrade decoratif. */
-    background-image:
-      radial-gradient(1200px 600px at 78% -10%, rgba(27, 92, 224, 0.08), transparent 60%),
-      radial-gradient(900px 500px at -10% 10%, rgba(214, 32, 39, 0.05), transparent 55%);
-    background-attachment: fixed;
+    /* Plus de halos en degrade : c'est ce qui datait le plus. Le fond est un
+       aplat, la profondeur viendra des images et des filets. */
   }
 
   h1,
@@ -50,17 +118,33 @@
        invisibles pour qui a desactive les animations. */
     [data-anim],
     [data-anim] > *,
-    .lettres > span {
+    .lettres > span,
+    .titre-presse span span {
       opacity: 1 !important;
       transform: none !important;
       clip-path: none !important;
+      filter: none !important;
       animation: none !important;
+    }
+
+    /* La lanterne reste allumee : c'est une lumiere, pas un mouvement. On
+       coupe seulement sa respiration. */
+    .lanterne-repli {
+      animation: none !important;
+      opacity: 0.85;
     }
   }
 }
 
 @layer components {
-  /* --- Signature : deux mots en surimpression hors repere -------------- */
+  /* --- Signature : la separation quadri --------------------------------
+     Un mot, trois plaques d'encre — cyan, magenta, jaune — qui arrivent hors
+     repere et se calent. C'est le geste du metier mis a l'ecran, et c'est la
+     seule audace de la page : tout le reste reste calme.
+     Le mode de fusion change avec le theme parce que la physique change :
+     sur papier les encres se soustraient (multiply), a l'ecran elles
+     s'additionnent (screen). Dans les deux cas, C+M+J calees redonnent la
+     composite — le mot se lit en couleur de papier. */
   .surimpression {
     @apply relative inline-block;
   }
@@ -68,26 +152,32 @@
     @apply absolute inset-0 select-none;
     -webkit-user-select: none;
     user-select: none;
+    mix-blend-mode: multiply;
   }
-  .surimpression > .calque-bleu {
+  .dark .surimpression > .calque,
+  .zone-sombre .surimpression > .calque {
+    mix-blend-mode: screen;
+  }
+  .surimpression > .calque-cyan {
     @apply text-encre-vif animate-caler;
-    mix-blend-mode: multiply;
   }
-  .surimpression > .calque-rouge {
-    @apply text-rouge animate-caler-rouge;
-    mix-blend-mode: multiply;
+  .surimpression > .calque-magenta {
+    @apply text-rouge animate-caler-magenta;
+  }
+  .surimpression > .calque-jaune {
+    @apply text-or animate-caler-jaune;
   }
   .surimpression > .calque-texte {
     @apply relative text-plomb-noir;
   }
   .surimpression-hover > .calque {
-    transition: transform 260ms theme("transitionTimingFunction.douce");
+    transition: transform 300ms theme("transitionTimingFunction.douce");
   }
-  .surimpression-hover:hover > .calque-bleu {
-    transform: translate(-0.03em, 0.018em);
-  }
-  .surimpression-hover:hover > .calque-rouge {
-    transform: translate(0.03em, -0.018em);
+  /* Au survol, les trois plaques se calent : le mot passe sous presse et se
+     nettoie. C'est le geste du metier, et il se fait dans le bon sens —
+     l'etat par defaut reste hors repere, sinon la signature ne se voit pas. */
+  .surimpression-hover:hover > .calque {
+    transform: translate(0, 0);
   }
 
   /* --- Reperes d'imprimeur : detail, plus decor de fond ---------------- */
@@ -123,59 +213,99 @@
     @apply font-mono text-micro text-plomb-clair;
   }
 
-  /* --- Surfaces Premium ------------------------------------------------ */
+  /* --- Surfaces ---------------------------------------------------------
+     Un filet d'un pixel, pas une ombre portee. Sur fond sombre l'ombre ne se
+     voit pas ; c'est le trait qui separe, comme un trait de coupe. */
   .plaque {
-    @apply rounded-plaque border border-black/[0.06] bg-white shadow-plaque;
+    @apply rounded-plaque border bg-carte;
+    border-color: rgb(var(--c-filet) / var(--c-filet-opacite));
   }
 
   .plaque-douce {
-    @apply rounded-douce border border-black/[0.06] bg-white;
+    @apply rounded-douce border bg-carte;
+    border-color: rgb(var(--c-filet) / var(--c-filet-opacite));
   }
 
   .carte-lien {
-    @apply plaque overflow-hidden transition duration-300 ease-douce
-           hover:-translate-y-1.5 hover:shadow-releve;
+    @apply plaque overflow-hidden transition duration-300 ease-douce;
+  }
+  .carte-lien:hover {
+    border-color: rgb(var(--i-cyan) / 0.65);
   }
 
+  /* La carte ne decolle plus au survol : elle prend l'encre. Le soulevement +
+     ombre diffuse etait le reflexe de carte SaaS, vu partout. */
   .carte-premium {
-    @apply relative overflow-hidden rounded-plaque border border-black/[0.08] bg-white p-1
-           shadow-plaque transition duration-300 ease-douce
-           hover:-translate-y-1.5 hover:border-or/40 hover:shadow-releve;
+    @apply relative overflow-hidden rounded-plaque border bg-carte transition duration-300 ease-douce;
+    border-color: rgb(var(--c-filet) / var(--c-filet-opacite));
+  }
+  .carte-premium:hover {
+    border-color: rgb(var(--i-cyan) / 0.7);
   }
 
   .badge-authentique {
-    @apply inline-flex items-center gap-2 rounded-full border border-or/30 bg-or/10 px-4 py-1.5
-           text-micro font-medium uppercase tracking-[0.08em] text-or-sombre backdrop-blur-md;
+    @apply inline-flex items-center gap-2 rounded-douce border border-encre/40 px-3 py-1
+           text-micro font-medium uppercase tracking-[0.12em] text-encre;
   }
 
-  /* --- Boutons ---------------------------------------------------------- */
+  /* --- Boutons -----------------------------------------------------------
+     Plaque d'encre ebarbee : l'angle superieur droit est coupe en biseau,
+     comme une plaque offset massicotee. Ni rectangle ni pilule — une forme
+     qui vient de l'atelier et qu'on ne voit pas ailleurs.
+     Le biseau est fait au clip-path : il suit le fond, la bordure et l'etat
+     de survol sans avoir a redessiner quoi que ce soit. */
   .btn {
-    @apply inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5
-           text-[0.9375rem] font-medium transition duration-300 ease-douce active:scale-[0.98];
+    @apply relative inline-flex items-center justify-center gap-2.5 px-7 py-3
+           text-[0.9375rem] font-medium tracking-[-0.01em]
+           transition duration-200 ease-douce active:scale-[0.99];
+    clip-path: polygon(0 0, calc(100% - 0.85em) 0, 100% 0.85em, 100% 100%, 0 100%);
   }
+  /* Au survol la coupe s'ouvre : la plaque se retire de la presse. */
+  .btn:hover {
+    clip-path: polygon(0 0, calc(100% - 1.25em) 0, 100% 1.25em, 100% 100%, 0 100%);
+  }
+  /* Le texte sur une encre pleine est toujours le noir riche : le blanc sur
+     du cyan ou du jaune ne passe aucun seuil de contraste. */
   .btn-encre {
-    @apply btn bg-encre text-white shadow-plaque hover:bg-encre-vif hover:shadow-releve;
+    @apply btn bg-encre text-[#0A0D11] hover:bg-encre-vif;
   }
   .btn-rouge {
-    @apply btn bg-rouge text-white shadow-plaque hover:bg-rouge-sombre hover:shadow-releve;
+    @apply btn bg-rouge text-white hover:bg-rouge-sombre;
   }
   .btn-or {
-    @apply btn bg-gradient-to-r from-or-sombre via-or to-or-clair text-encre-nuit font-semibold shadow-plaque hover:brightness-110 hover:shadow-releve;
+    @apply btn bg-or font-semibold text-[#0A0D11] hover:bg-or-clair;
   }
+  /* Le biseau mange la bordure d'un bouton en contour : on la redessine en
+     fond, le contenu se posant sur un calque interieur legerement reduit. */
   .btn-contour {
-    @apply btn border border-plomb-noir/[0.15] bg-white/80 text-plomb-noir backdrop-blur-sm
-           hover:border-encre/40 hover:bg-white hover:text-encre;
+    @apply btn text-plomb-noir hover:text-encre;
+    background: rgb(var(--c-filet) / 0.28);
+  }
+  .btn-contour::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    background: rgb(var(--c-surface));
+    clip-path: polygon(0 0, calc(100% - 0.8em) 0, 100% 0.8em, 100% 100%, 0 100%);
+    z-index: -1;
+  }
+  .btn-contour:hover {
+    background: rgb(var(--i-cyan));
   }
   .btn-clair {
-    @apply btn bg-white text-encre shadow-sm hover:bg-creme hover:text-encre-vif;
+    @apply btn bg-carte text-encre hover:bg-creme-fonce;
   }
   .btn-petit {
-    @apply rounded-full px-4.5 py-2 text-sm;
+    @apply px-4 py-1.5 text-sm;
+    clip-path: polygon(0 0, calc(100% - 0.7em) 0, 100% 0.7em, 100% 100%, 0 100%);
+  }
+  .btn-petit:hover {
+    clip-path: polygon(0 0, calc(100% - 1em) 0, 100% 1em, 100% 100%, 0 100%);
   }
 
   /* --- Formulaires ------------------------------------------------------ */
   .champ {
-    @apply w-full rounded-douce border border-plomb-noir/[0.12] bg-white px-4 py-3
+    @apply w-full rounded-douce border border-plomb-noir/[0.12] bg-carte px-4 py-3 dark:border-white/[0.12]
            text-[0.9375rem] text-plomb-noir placeholder:text-plomb-clair
            transition duration-200
            focus:border-encre-vif focus:outline-none focus:ring-4 focus:ring-encre-vif/[0.12];
@@ -292,19 +422,25 @@
     will-change: auto;
   }
 
-  /* Glissement vers le haut, le plus courant. */
+  /* Glissement vers le haut, le plus courant. Un leger flou de depart donne
+     la profondeur de champ des sites Apple : le contenu "fait le point". */
   [data-anim="monte"] {
     opacity: 0;
     transform: translateY(28px);
+    filter: blur(8px);
     transition:
       opacity 900ms theme("transitionTimingFunction.douce"),
-      transform 900ms theme("transitionTimingFunction.douce");
+      transform 900ms theme("transitionTimingFunction.douce"),
+      filter 900ms theme("transitionTimingFunction.douce");
   }
 
   /* Fondu seul, pour les blocs de texte secondaires. */
   [data-anim="fondu"] {
     opacity: 0;
-    transition: opacity 1100ms theme("transitionTimingFunction.douce");
+    filter: blur(6px);
+    transition:
+      opacity 1100ms theme("transitionTimingFunction.douce"),
+      filter 1100ms theme("transitionTimingFunction.douce");
   }
 
   /* Revelation par volet : l'image se decouvre de bas en haut.
@@ -345,17 +481,73 @@
   [data-anim="echelle"] {
     opacity: 0;
     transform: scale(0.96);
+    filter: blur(6px);
     transition:
       opacity 800ms theme("transitionTimingFunction.douce"),
-      transform 800ms theme("transitionTimingFunction.douce");
+      transform 800ms theme("transitionTimingFunction.douce"),
+      filter 800ms theme("transitionTimingFunction.douce");
   }
 
   [data-anim][data-visible="true"] {
     opacity: 1;
     transform: none;
+    filter: blur(0);
   }
 
-  /* Titre compose lettre par lettre. */
+  /* Lanterne sans WebGL : un faisceau conique descendu du haut, double d'un
+     halo large. Le meme geste que le shader, en deux degrades — de quoi tenir
+     sur une machine modeste ou quand le GPU n'est pas disponible. */
+  .lanterne-repli {
+    position: absolute;
+    inset: 0;
+    /* Le faisceau part du haut a gauche et s'ouvre en descendant : decale,
+       il eclaire la page au lieu de la barrer en deux. Les valeurs restent
+       basses — une lanterne pose une ambiance, elle ne doit jamais disputer
+       la lecture au texte qu'elle eclaire. */
+    background:
+      conic-gradient(
+        from 158deg at 34% -18%,
+        transparent 0deg,
+        rgb(var(--i-cyan) / 0.16) 10deg,
+        rgb(var(--i-cyan) / 0.05) 22deg,
+        transparent 36deg
+      ),
+      radial-gradient(72rem 52rem at 38% -12%, rgb(var(--i-cyan) / 0.12), transparent 70%);
+    animation: lanterne 13s ease-in-out infinite;
+  }
+
+  /* Temoin de presse : un battement bref toutes les dix secondes. Le cycle est
+     long a dessein — un voyant qui clignote sans arret devient du bruit et
+     empeche de lire ; espace, il signale juste que l'atelier tourne. */
+  .voyant-presse {
+    animation: voyant 10s ease-in-out infinite;
+  }
+
+  /* Curseur de terminal : plein pendant la frappe, clignotant une fois la
+     ligne posee. Le clignotement ne demarre qu'a la fin pour ne pas parasiter
+     la lecture pendant que le texte se remplit. */
+  .curseur-terminal[data-fini="true"] {
+    animation: clignote 1.05s step-end infinite;
+  }
+
+  /* Titre compose lettre par lettre : chaque caractere arrive de sa propre
+     profondeur et se cale, comme un caractere depose dans le composteur.
+     La transition porte sur les <span> les plus internes (les lettres),
+     chacun avec son propre transition-delay. */
+  .titre-presse span span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.42em) rotate(3deg) scale(0.94);
+    transition:
+      opacity 620ms theme("transitionTimingFunction.douce"),
+      transform 620ms theme("transitionTimingFunction.douce");
+  }
+  .titre-presse[data-joue="true"] span span {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Titre compose lettre par lettre (ancien composant Lettres). */
   .lettres > span {
     display: inline-block;
     opacity: 0;
@@ -363,7 +555,10 @@
     animation: lettre 900ms theme("transitionTimingFunction.douce") forwards;
   }
 
-  /* Filet lumineux qui traverse une surface au survol. */
+  /* Passage de raclette : une bande etroite traverse la surface au survol.
+     Remplace l'ancien reflet blanc facon vitrine — c'etait le detail le plus
+     date de la page. Ici la bande est fine, rapide, et de la couleur du
+     support : elle evoque le passage sur l'ecran de serigraphie. */
   .brillance {
     position: relative;
     overflow: hidden;
@@ -374,13 +569,13 @@
     position: absolute;
     inset: 0;
     background: linear-gradient(
-      105deg,
-      transparent 35%,
-      rgba(255, 255, 255, 0.55) 50%,
-      transparent 65%
+      100deg,
+      transparent 46%,
+      rgb(var(--c-text-strong) / 0.14) 50%,
+      transparent 54%
     );
     transform: translateX(-120%);
-    transition: transform 900ms theme("transitionTimingFunction.douce");
+    transition: transform 620ms theme("transitionTimingFunction.douce");
     pointer-events: none;
   }
   .brillance:hover::after {
@@ -449,6 +644,54 @@
   }
 }
 
+
+/* Le faisceau de repli respire : il s'ouvre et se referme tres lentement,
+   comme une lampe d'atelier qu'on oriente. */
+@keyframes lanterne {
+  0%,
+  100% {
+    opacity: 0.72;
+    transform: rotate(-1.6deg) scale(1.04);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(1.6deg) scale(1.1);
+  }
+}
+
+/* Le battement occupe moins d'une seconde sur dix : deux eclats rapproches,
+   puis le voyant se rendort. */
+@keyframes voyant {
+  0%,
+  92%,
+  100% {
+    opacity: 0.28;
+    box-shadow: 0 0 0 0 rgb(var(--i-magenta) / 0);
+  }
+  94% {
+    opacity: 1;
+    box-shadow: 0 0 0 4px rgb(var(--i-magenta) / 0.35);
+  }
+  96% {
+    opacity: 0.4;
+    box-shadow: 0 0 0 0 rgb(var(--i-magenta) / 0);
+  }
+  98% {
+    opacity: 1;
+    box-shadow: 0 0 0 6px rgb(var(--i-magenta) / 0.25);
+  }
+}
+
+@keyframes clignote {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
 
 @keyframes lettre {
   to {

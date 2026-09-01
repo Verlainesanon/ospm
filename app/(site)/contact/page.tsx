@@ -1,6 +1,8 @@
 import { getReglages, reglage, numeroWhatsapp } from "@/lib/settings";
-import { Eyebrow, Section, Repere } from "@/components/ui";
-import { Reveal, Lettres, Magnetique } from "@/components/anim";
+import { Section, Repere } from "@/components/ui";
+import { Reveal, Magnetique } from "@/components/anim";
+import { TitrePresse } from "@/components/titre-presse";
+import { LigneCommande } from "@/components/ligne-commande";
 import { FormulaireContact } from "./formulaire";
 
 export const metadata = { title: "Contact" };
@@ -22,12 +24,12 @@ export default async function Contact() {
       <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
         <div>
           <Reveal effet="fondu">
-            <Eyebrow>Nous joindre</Eyebrow>
+            <LigneCommande texte="contact --atelier" vitesse={42} delai={200} />
           </Reveal>
-          <h1 className="mt-6 text-affiche">
-            <Lettres texte="60, Rue" depart={130} pas={38} />
+          <h1 className="mt-7 text-enseigne">
+            <TitrePresse texte="60, Rue" depart={130} pas={38} />
             <br />
-            <Lettres texte="Dessalines" depart={430} pas={38} className="italic text-encre" />
+            <TitrePresse texte="Dessalines" depart={430} pas={38} className="text-encre" />
           </h1>
           <p className="mt-4 text-plomb">
             Passez au comptoir, ecrivez sur WhatsApp, ou laissez un message ici.

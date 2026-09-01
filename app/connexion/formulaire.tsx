@@ -23,16 +23,16 @@ export function FormulaireConnexion() {
     // Panneau sombre : les champs creux sont concus pour un fond profond.
     <form
       action={action}
-      className="space-y-6 rounded-plaque bg-encre-nuit p-8 shadow-flottant"
+      className="zone-sombre space-y-6 rounded-plaque border border-white/10 bg-creme-fonce p-8"
     >
       {etat.erreur && (
-        <p className="rounded-douce border border-rouge/40 bg-rouge/15 px-4 py-3 text-sm text-white">
+        <p className="rounded-douce border border-rouge/40 bg-rouge/15 px-4 py-3 text-sm text-plomb-noir">
           {etat.erreur}
         </p>
       )}
 
       <div>
-        <label className="mb-2 block text-micro font-medium text-creme/50" htmlFor="email">
+        <label className="mb-2 block text-micro font-medium text-plomb" htmlFor="email">
           Identifiant
         </label>
         <input
@@ -47,7 +47,7 @@ export function FormulaireConnexion() {
       </div>
 
       <div>
-        <label className="mb-2 block text-micro font-medium text-creme/50" htmlFor="password">
+        <label className="mb-2 block text-micro font-medium text-plomb" htmlFor="password">
           Mot de passe
         </label>
         <input

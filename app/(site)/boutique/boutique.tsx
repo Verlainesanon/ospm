@@ -108,7 +108,7 @@ export function Boutique({ articles }: { articles: ArticleBoutique[] }) {
     <div className="grid gap-10 lg:grid-cols-[1.5fr_1fr] lg:items-start">
       <div className="grid gap-px overflow-hidden rounded-douce border border-plomb-noir/10 bg-creme-fonce sm:grid-cols-2">
         {articles.map((a) => (
-          <article key={a.slug} className="flex flex-col bg-white p-6">
+          <article key={a.slug} className="flex flex-col border border-plomb-noir/10 bg-carte p-6">
             <span className="text-micro text-plomb">{a.categorie}</span>
             <h2 className="mt-2 text-sous">
               {a.nom}

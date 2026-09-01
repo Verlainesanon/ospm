@@ -9,3 +9,8 @@ tsconfig.tsbuildinfo
 CLAUDE.md
 HOMIE-MEMOIRE.md
 CV-PROJET-OSPM*.md
+
+# Sorties des scripts d'audit visuel : des captures, regénérables a volonté.
+captures/
+captures-*/
+.playwright-mcp/

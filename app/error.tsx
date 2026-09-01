@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center bg-[#f7f5f0] text-[#1b1c1e]">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#F2EFE9] p-6 text-center text-[#0A0D11] dark:bg-[#0A0D11] dark:text-[#F2EFE9]">
       <div className="max-w-md rounded-2xl bg-white p-8 shadow-lg border border-black/5">
         <h2 className="text-2xl font-bold text-[#dc2626] mb-3">Une erreur est survenue</h2>
         <p className="text-sm text-[#475569] mb-6">
@@ -24,7 +24,7 @@ export default function Error({
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
             onClick={() => reset()}
-            className="rounded-full bg-[#111827] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-black"
+            className="bg-[#00AEEF] px-6 py-2.5 text-sm font-medium text-[#0A0D11] transition hover:brightness-110"
           >
             Réessayer
           </button>

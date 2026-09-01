@@ -28,7 +28,7 @@ export function VoileEnvoi({
 }) {
   return (
     <div
-      className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 rounded-plaque bg-white/85 backdrop-blur-sm"
+      className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-5 rounded-plaque bg-carte/85 backdrop-blur-sm"
       aria-live="polite"
     >
       <Loader grand />

@@ -2,8 +2,9 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Reveal } from "./anim";
 
-// Titre en surimpression : trois calques du meme mot, bleu et rouge decales,
-// qui se calent a l'arrivee. Reserve a un ou deux mots par page.
+// Separation quadri : le meme mot tire quatre fois — une plaque par encre
+// process, plus le noir. Les trois plaques arrivent hors repere et se calent.
+// C'est la signature du site : un seul mot par page, jamais deux.
 export function Surimpression({
   children,
   className = "",
@@ -15,10 +16,13 @@ export function Surimpression({
 }) {
   return (
     <span className={`surimpression ${survol ? "surimpression-hover" : ""} ${className}`}>
-      <span aria-hidden className="calque calque-bleu">
+      <span aria-hidden className="calque calque-cyan">
         {children}
       </span>
-      <span aria-hidden className="calque calque-rouge">
+      <span aria-hidden className="calque calque-magenta">
+        {children}
+      </span>
+      <span aria-hidden className="calque calque-jaune">
         {children}
       </span>
       <span className="calque-texte">{children}</span>
@@ -127,7 +131,7 @@ export function BonDeTravail({
   lignes: { label: string; valeur: string }[];
 }) {
   return (
-    <div className="relative overflow-hidden rounded-plaque border border-or/30 bg-white p-7 shadow-releve">
+    <div className="relative overflow-hidden rounded-plaque border border-or/30 bg-carte p-7 shadow-releve">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-encre via-or to-rouge" />
       <div className="mb-5 flex items-center justify-between border-b border-plomb-noir/[0.08] pb-4">
         <span className="inline-flex items-center gap-1.5 text-micro font-medium uppercase tracking-[0.1em] text-encre">

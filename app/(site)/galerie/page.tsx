@@ -2,8 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { VISUELS_ATELIER } from "@/lib/visuels";
-import { Eyebrow, Section } from "@/components/ui";
-import { Reveal, Lettres } from "@/components/anim";
+import { Section } from "@/components/ui";
+import { Reveal } from "@/components/anim";
+import { TitrePresse } from "@/components/titre-presse";
+import { LigneCommande } from "@/components/ligne-commande";
 
 export const metadata = { title: "Realisations" };
 
@@ -17,10 +19,10 @@ export default async function Galerie() {
     <Section>
       <div className="max-w-3xl">
         <Reveal effet="fondu">
-          <Eyebrow>Sorties d&apos;atelier</Eyebrow>
+          <LigneCommande texte="galerie --realisations" vitesse={42} delai={200} />
         </Reveal>
-        <h1 className="mt-6 text-affiche">
-          <Lettres texte="Realisations" depart={140} pas={40} />
+        <h1 className="mt-7 text-enseigne">
+          <TitrePresse texte="Realisations" depart={140} pas={40} />
         </h1>
       </div>
 

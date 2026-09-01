@@ -3,9 +3,21 @@ import Image from "next/image";
 import { prisma } from "@/lib/db";
 import { getReglages, reglage, numeroWhatsapp } from "@/lib/settings";
 import { visuelAtelier, VISUELS_ATELIER } from "@/lib/visuels";
-import { Surimpression, Eyebrow, Section, EnteteSection, BonDeTravail } from "@/components/ui";
-import { Logo, RubanCmjn } from "@/components/logo";
-import { Reveal, Lettres, Parallaxe, Magnetique, Compteur } from "@/components/anim";
+import { Surimpression, Eyebrow, BonDeTravail } from "@/components/ui";
+import { RubanCmjn } from "@/components/logo";
+import { Reveal, Compteur, Magnetique } from "@/components/anim";
+import { TitrePresse } from "@/components/titre-presse";
+import { Plaque3D } from "@/components/plaque-3d";
+import { LigneCommande } from "@/components/ligne-commande";
+import { SceauAtelier } from "@/components/sceau-atelier";
+
+// Une encre process par atelier. Le ruban CMJN du logo devient la cle de
+// lecture du site : chaque atelier a sa plaque, comme sur une presse.
+const ENCRES = [
+  { texte: "text-encre", fond: "bg-encre" },
+  { texte: "text-rouge", fond: "bg-rouge" },
+  { texte: "text-or", fond: "bg-or" },
+] as const;
 
 // Les etapes sont une vraie sequence de production : la numerotation porte
 // une information, elle ne decore pas.
@@ -76,361 +88,326 @@ export default async function Accueil() {
 
   return (
     <>
-      {/* ---------------------------------------------------------- Hero */}
-      <section className="relative overflow-hidden pt-4">
-        {/* Halos lumineux d'ambiance premium */}
-        <div
-          aria-hidden
-          className="respire pointer-events-none absolute -right-32 -top-40 h-[42rem] w-[42rem] rounded-full opacity-60"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(27,92,224,0.18) 0%, rgba(197,160,89,0.08) 45%, rgba(0,0,0,0) 70%)",
-          }}
-        />
-        <div
-          aria-hidden
-          className="respire pointer-events-none absolute -left-32 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full opacity-40"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(214,32,39,0.12) 0%, rgba(27,92,224,0.05) 50%, rgba(0,0,0,0) 70%)",
-          }}
-        />
+      {/* ---------------------------------------------------------- Hero
+          Typographie seule sur le noir riche. Mettre une image en fond ici la
+          condamnait au voile — donc a la tache. Les images ont leur place plus
+          bas, dans la liste des ateliers et dans la galerie, ou elles sont le
+          sujet et pas un decor. */}
+      <section className="relative flex min-h-[92svh] flex-col justify-end overflow-hidden">
+        <div className="relative mx-auto w-full max-w-[104rem] px-5 pt-36 sm:px-8">
+          {/* Cadre elargi pour l'enseigne : a la taille voulue, quatre mots ne
+              tiennent pas dans une colonne de texte. */}
+          <div className="max-w-6xl pb-16">
+            <Reveal effet="fondu">
+              <div className="flex items-center gap-5">
+                <SceauAtelier />
+                <LigneCommande texte="Petit-Goâve — 60, Rue Dessalines" vitesse={38} delai={200} />
+              </div>
+            </Reveal>
 
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-12 sm:px-8 md:pb-28 md:pt-20">
-          <div className="grid gap-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div>
-              <Reveal effet="fondu">
-                <div className="inline-flex items-center gap-2 rounded-full border border-or/40 bg-white/80 px-4 py-1.5 shadow-sm backdrop-blur-md">
-                  <span className="h-2 w-2 rounded-full bg-or animate-pulse" />
-                  <span className="text-micro font-medium uppercase tracking-[0.1em] text-encre-nuit">
-                    Atelier Artisanal & Impression High-Tech • Petit-Goâve
-                  </span>
-                </div>
-              </Reveal>
-
-              <h1 className="mt-6 text-affiche">
-                <Lettres texte="L'atelier qui " depart={250} />
-                <span className="italic text-encre">
-                  <Lettres texte="imprime" depart={700} />
-                </span>
+            {/* Structure reprise des maquettes de reference : le nom en grand,
+                puis une accroche courte avec un verbe. La periphrase qui etait
+                la ("L'atelier qui imprime votre image") disait la meme chose en
+                deux fois plus de mots. */}
+            <h1 className="mt-7">
+              {/* Le nom est coupe a la main en deux lignes : laisse libre, il
+                  se briserait n'importe ou selon la largeur de l'ecran. */}
+              <span className="block text-enseigne">
+                <TitrePresse texte="Official Services" depart={180} pas={22} />
                 <br />
-                <Lettres texte="votre " depart={1000} />
-                <Surimpression survol>image</Surimpression>.
-              </h1>
+                <TitrePresse texte="Printing and More" depart={560} pas={22} />
+              </span>
+              <span className="mt-3 block text-titre text-encre">
+                <TitrePresse texte="imprime vos" depart={1000} pas={26} />
+                &nbsp;
+                <Surimpression survol>idées</Surimpression>.
+              </span>
+            </h1>
 
-              <Reveal effet="monte" delai={200}>
-                <p className="plomb-texte mt-7 max-w-lg text-lg leading-relaxed text-plomb-noir/80">
-                  {reglage(
-                    r,
-                    "hero.texte",
-                    "Informatique, conception graphique, impression grand format, photographie et sérigraphie d'art.",
-                  )}
-                </p>
-              </Reveal>
+            <Reveal effet="monte" delai={200}>
+              <p className="mt-8 max-w-xl text-lg leading-relaxed text-plomb">
+                {reglage(
+                  r,
+                  "hero.texte",
+                  "Informatique, conception graphique, impression grand format, photographie et sérigraphie d'art.",
+                )}
+              </p>
+            </Reveal>
 
-              <Reveal effet="monte" delai={340}>
-                <div className="mt-9 flex flex-wrap items-center gap-4">
-                  <Magnetique>
-                    <Link href="/devis" className="btn-encre brillance shadow-releve">
-                      ✨ {reglage(r, "hero.cta", "Demander un devis gratuit")}
-                    </Link>
-                  </Magnetique>
-                  <Magnetique amplitude={10}>
-                    <a
-                      href={`https://wa.me/${wa}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn-contour"
-                    >
-                      💬 Écrire sur WhatsApp
-                    </a>
-                  </Magnetique>
-                </div>
-              </Reveal>
-
-              <Reveal effet="monte" delai={480}>
-                <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 rounded-2xl border border-black/[0.06] bg-white/60 p-6 shadow-sm backdrop-blur-sm">
-                  <div>
-                    <dt className="font-display text-4xl font-semibold text-encre">
-                      <Compteur valeur={5} />
-                    </dt>
-                    <dd className="mt-1 text-micro leading-snug text-plomb font-medium">
-                      Ateliers sous un toit
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="font-display text-4xl font-semibold text-rouge">
-                      <Compteur valeur={24} suffixe=" h" />
-                    </dt>
-                    <dd className="mt-1 text-micro leading-snug text-plomb font-medium">Délais de tirage</dd>
-                  </div>
-                  <div>
-                    <dt className="font-display text-4xl font-semibold text-or-sombre">100%</dt>
-                    <dd className="mt-1 text-micro leading-snug text-plomb font-medium">
-                      Bon à tirer garanti
-                    </dd>
-                  </div>
-                </dl>
-              </Reveal>
-            </div>
-
-            {/* Mosaïque Visuelle Premium */}
-            <div className="relative">
-              <Reveal effet="volet" delai={350}>
-                <Parallaxe force={0.06}>
-                  <div className="relative aspect-[4/5] w-full overflow-hidden rounded-plaque border-2 border-or/20 bg-white shadow-flottant">
-                    <Image
-                      src="/visuels/serigraphie.svg"
-                      alt="Sérigraphie à l'atelier OSPM"
-                      fill
-                      priority
-                      className="object-cover transition duration-700 hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-encre-nuit/60 via-transparent to-transparent opacity-80" />
-                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <p className="text-micro uppercase tracking-widest text-or-clair">Atelier de Sérigraphie</p>
-                      <h3 className="font-display text-2xl font-normal text-white mt-1">L&apos;Excellence du Tirage</h3>
-                    </div>
-                  </div>
-                </Parallaxe>
-              </Reveal>
-
-              <Reveal
-                effet="echelle"
-                delai={900}
-                className="absolute -bottom-8 -left-6 hidden w-60 sm:block"
-              >
-                <div className="overflow-hidden rounded-plaque border-4 border-white shadow-releve">
-                  <Image
-                    src="/visuels/badges.svg"
-                    alt="Badges imprimés"
-                    width={400}
-                    height={300}
-                    className="h-auto w-full object-cover"
-                  />
-                </div>
-              </Reveal>
-
-              <Reveal
-                effet="echelle"
-                delai={1100}
-                className="absolute -right-4 -top-6 hidden md:block"
-              >
-                <span className="inline-flex items-center gap-2 rounded-full border border-or/40 bg-encre-nuit px-5 py-2.5 text-white shadow-flottant backdrop-blur-md">
-                  <span className="h-2 w-2 rounded-full bg-rouge" />
-                  <span className="font-mono text-micro font-medium uppercase text-white/90">60, Rue Dessalines</span>
-                </span>
-              </Reveal>
-            </div>
+            <Reveal effet="monte" delai={340}>
+              <div className="mt-10 flex flex-wrap items-center gap-3">
+                <Magnetique>
+                  <Link href="/devis" className="btn-encre">
+                    {reglage(r, "hero.cta", "Demander un devis")}
+                  </Link>
+                </Magnetique>
+                <a
+                  href={`https://wa.me/${wa}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-contour"
+                >
+                  Écrire sur WhatsApp
+                </a>
+              </div>
+            </Reveal>
           </div>
+
+          {/* Les chiffres tiennent sur une ligne reglee. La boite arrondie a
+              fond translucide etait le detail le plus generique de la page. */}
+          <Reveal effet="monte" delai={480}>
+            <dl className="grid grid-cols-3 border-t border-plomb-noir/20">
+              <div className="py-7 pr-5">
+                <dt className="font-display text-4xl font-semibold text-encre sm:text-5xl">
+                  <Compteur valeur={5} />
+                </dt>
+                <dd className="mt-2 max-w-[14rem] text-micro leading-snug text-plomb">
+                  Ateliers sous un toit
+                </dd>
+              </div>
+              <div className="border-l border-plomb-noir/20 py-7 pl-5 pr-5 sm:pl-8">
+                <dt className="font-display text-4xl font-semibold text-rouge sm:text-5xl">
+                  <Compteur valeur={24} suffixe=" h" />
+                </dt>
+                <dd className="mt-2 max-w-[14rem] text-micro leading-snug text-plomb">
+                  Délai de tirage courant
+                </dd>
+              </div>
+              <div className="border-l border-plomb-noir/20 py-7 pl-5 pr-5 sm:pl-8">
+                <dt className="font-display text-4xl font-semibold text-or sm:text-5xl">100 %</dt>
+                <dd className="mt-2 max-w-[14rem] text-micro leading-snug text-plomb">
+                  Bon à tirer validé avant presse
+                </dd>
+              </div>
+            </dl>
+          </Reveal>
         </div>
       </section>
 
-      {/* ------------------------------------------------------ Ateliers */}
-      <Section id="services">
-        <EnteteSection
-          eyebrow="Cinq Ateliers Spécialisés"
-          titre={
-            <>
-              L&apos;Artisanat Graphique & Impression,
-              <br />
-              sur tous vos supports
-            </>
-          }
-          texte="Du badge d'employé haute précision à l'habillage complet de vitrine, découvrez la qualité d'impression OSPM."
-          action={
+      {/* ------------------------------------------------------ Ateliers
+          Liste editoriale plutot que grille de cartes : chaque atelier occupe
+          toute la largeur, porte son numero et une des trois encres. */}
+      <section id="services" className="mx-auto w-full max-w-[104rem] px-5 pt-28 sm:px-8 md:pt-36">
+        <div className="flex flex-wrap items-end justify-between gap-6 pb-12">
+          <Reveal effet="monte" className="max-w-2xl">
+            <Eyebrow>Cinq ateliers, un seul toit</Eyebrow>
+            <h2 className="mt-5 text-titre">Du badge à l&apos;habillage de vitrine</h2>
+          </Reveal>
+          <Reveal effet="fondu" delai={220}>
             <Link href="/services" className="btn-contour btn-petit">
-              Catalogue complet →
+              Catalogue complet
             </Link>
-          }
-        />
-
-        <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((c, i) => (
-            <Reveal key={c.id} effet="monte" delai={i * 90} className="flex">
-            <Link href={`/services/${c.slug}`} className="carte-premium group flex w-full flex-col">
-              <div className="relative aspect-[5/3] overflow-hidden rounded-t-[10px]">
-                <Image
-                  src={visuelAtelier(c.slug)}
-                  alt={c.nom}
-                  fill
-                  className="object-cover transition duration-700 ease-douce group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition" />
-                <span className="absolute top-4 left-4 rounded-full bg-white/90 px-3 py-1 text-micro font-semibold uppercase tracking-wider text-encre-nuit backdrop-blur-md shadow-sm">
-                  Atelier #{i + 1}
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col p-7">
-                <h3 className="text-sous group-hover:text-encre transition-colors">{c.nom}</h3>
-                <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-plomb">{c.description}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {c.services.slice(0, 3).map((s: ServiceItem) => (
-                    <li key={s.id} className="rounded-full border border-black/[0.06] bg-creme/80 px-3 py-1 text-micro text-plomb-noir font-medium">
-                      {s.nom}
-                    </li>
-                  ))}
-                </ul>
-                <span className="mt-auto inline-flex items-center gap-2 pt-6 text-[0.9375rem] font-medium text-encre transition group-hover:text-rouge">
-                  Explorer l&apos;atelier
-                  <span className="transition-transform duration-300 ease-douce group-hover:translate-x-1.5">
-                    →
-                  </span>
-                </span>
-              </div>
-            </Link>
-            </Reveal>
-          ))}
-
-          <Reveal effet="monte" delai={categories.length * 90} className="flex">
-          <div className="relative flex w-full flex-col justify-between overflow-hidden rounded-plaque bg-encre-profond p-8 text-creme shadow-flottant border border-or/30">
-            <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-or/10 blur-2xl pointer-events-none" />
-            <div>
-              <RubanCmjn className="max-w-[7rem]" />
-              <h3 className="mt-6 text-sous font-normal text-white">
-                Un projet ou travail sur-mesure ?
-              </h3>
-              <p className="mt-3.5 text-[0.9375rem] leading-relaxed text-creme/75">
-                Une création spéciale, un format hors-norme ou une commande urgente ? Décrivez votre projet, nous calons le tarif et le délai immédiatement.
-              </p>
-            </div>
-            <Magnetique className="mt-8 self-start">
-              <Link href="/devis" className="btn-or brillance">
-                ✨ Demander un devis sur-mesure
-              </Link>
-            </Magnetique>
-          </div>
           </Reveal>
         </div>
-      </Section>
 
-      {/* --------------------------------------------------- Realisations */}
-      <Section className="border-y border-plomb-noir/[0.08] bg-white">
-        <EnteteSection
-          eyebrow="Sorties d'atelier"
-          titre="Ce qui passe par nos presses"
-          action={
-            <Link href="/galerie" className="btn-contour btn-petit">
-              Toutes les realisations
+        <ol className="border-t border-plomb-noir/15">
+          {categories.map((c, i) => {
+            const encre = ENCRES[i % ENCRES.length];
+            return (
+              <Reveal
+                key={c.id}
+                as="li"
+                effet="monte"
+                delai={i * 70}
+                className="group border-b border-plomb-noir/15"
+              >
+                <Link
+                  href={`/services/${c.slug}`}
+                  className="grid items-center gap-8 py-10 lg:grid-cols-[4rem_1fr_24rem] lg:py-12"
+                >
+                  <span className={`font-mono text-micro tracking-[0.14em] ${encre.texte}`}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+
+                  <div className="max-w-xl">
+                    <h3 className="text-titre">{c.nom}</h3>
+                    <p className="mt-3 text-[0.9375rem] leading-relaxed text-plomb">
+                      {c.description}
+                    </p>
+                    {/* Rangees de services facon "badge" : un libelle, un
+                        filet d'encre au bout. Le mono garde la voix technique. */}
+                    <ul className="mt-6 max-w-md">
+                      {c.services.slice(0, 3).map((s: ServiceItem) => (
+                        <li
+                          key={s.id}
+                          className="flex items-center justify-between gap-4 border-b border-plomb-noir/10 py-2.5 last:border-b-0"
+                        >
+                          <span className="font-mono text-micro tracking-[0.06em] text-plomb">
+                            {s.nom}
+                          </span>
+                          <span aria-hidden className={`h-px w-6 shrink-0 ${encre.fond}`} />
+                        </li>
+                      ))}
+                    </ul>
+                    <span className="mt-6 inline-flex items-center gap-2 text-[0.9375rem] font-medium text-plomb-noir">
+                      Explorer l&apos;atelier
+                      <span className="transition-transform duration-300 ease-douce group-hover:translate-x-1.5">
+                        →
+                      </span>
+                    </span>
+                  </div>
+
+                  <Plaque3D className="relative aspect-[4/3] overflow-hidden">
+                    <Image
+                      src={visuelAtelier(c.slug)}
+                      alt={c.nom}
+                      fill
+                      className="object-cover transition duration-700 ease-douce group-hover:scale-[1.04]"
+                    />
+                    {/* Filet d'encre tire sous l'image au survol : le meme
+                        geste que la raclette, en beaucoup plus discret. */}
+                    <span
+                      aria-hidden
+                      className={`absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 transition-transform duration-500 ease-douce group-hover:scale-x-100 ${encre.fond}`}
+                    />
+                  </Plaque3D>
+                </Link>
+              </Reveal>
+            );
+          })}
+        </ol>
+
+        <Reveal effet="monte" className="mt-14">
+          <div className="flex flex-col items-start justify-between gap-8 border-t-2 border-encre pt-10 md:flex-row md:items-end">
+            <div className="max-w-xl">
+              <RubanCmjn className="max-w-[7rem]" />
+              <h3 className="mt-6 text-sous">Un format hors-norme, une commande urgente ?</h3>
+              <p className="mt-3 text-[0.9375rem] leading-relaxed text-plomb">
+                Décrivez votre projet : nous calons le tarif et le délai dans la journée.
+              </p>
+            </div>
+            <Link href="/devis" className="btn-encre">
+              Demander un devis sur-mesure
             </Link>
-          }
-        />
+          </div>
+        </Reveal>
+      </section>
 
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
+      {/* --------------------------------------------------- Realisations
+          La galerie : images bord a bord, separees par un filet d'un pixel.
+          Aucune carte, aucun arrondi — le travail occupe tout l'espace. */}
+      <section className="mt-28 border-y border-plomb-noir/15 md:mt-36">
+        <div className="mx-auto flex w-full max-w-[104rem] flex-wrap items-end justify-between gap-6 px-5 py-12 sm:px-8">
+          <Reveal effet="monte" className="max-w-2xl">
+            <Eyebrow>Sorties d&apos;atelier</Eyebrow>
+            <h2 className="mt-5 text-titre">Ce qui passe par nos presses</h2>
+          </Reveal>
+          <Reveal effet="fondu" delai={220}>
+            <Link href="/galerie" className="btn-contour btn-petit">
+              Toutes les réalisations
+            </Link>
+          </Reveal>
+        </div>
+
+        <div className="grid grid-cols-2 gap-px bg-plomb-noir/15 md:grid-cols-3">
           {vitrine.slice(0, 6).map((v, i) => (
-            <Reveal key={v.titre} effet="volet" delai={i * 110}>
-            <figure className="carte-premium group">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-t-[10px]">
+            <Reveal key={v.titre} effet="fondu" delai={i * 90}>
+              <figure className="group relative aspect-[4/3] overflow-hidden bg-creme">
                 <Image
                   src={v.image}
                   alt={v.titre}
                   fill
-                  className="object-cover transition duration-700 ease-douce group-hover:scale-105"
+                  className="object-cover transition duration-700 ease-douce group-hover:scale-[1.04]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40 group-hover:opacity-20 transition" />
-              </div>
-              <figcaption className="px-5 py-4 text-[0.9375rem] font-medium text-plomb-noir group-hover:text-encre transition-colors">
-                {v.titre}
-              </figcaption>
-            </figure>
+                <figcaption className="absolute inset-x-0 bottom-0 translate-y-full bg-creme/95 px-5 py-3.5 text-micro uppercase tracking-[0.14em] text-plomb-noir transition-transform duration-300 ease-douce group-hover:translate-y-0">
+                  {v.titre}
+                </figcaption>
+              </figure>
             </Reveal>
           ))}
         </div>
 
         {realisations.length === 0 && (
-          <p className="mt-8 text-micro text-plomb-clair">
-            Compositions d&apos;atelier — les photos des vraies réalisations les remplacent depuis l&apos;administration.
+          <p className="mx-auto max-w-[104rem] px-5 py-5 text-micro text-plomb-clair sm:px-8">
+            Compositions d&apos;atelier — les photos des vraies réalisations les remplacent depuis
+            l&apos;administration.
           </p>
         )}
-      </Section>
+      </section>
 
-      {/* ------------------------------------------------------ Processus */}
-      <Section>
+      {/* ------------------------------------------------------ Processus
+          La numerotation reste : c'est une vraie sequence de production,
+          l'ordre porte une information que le lecteur doit avoir. */}
+      <section className="mx-auto w-full max-w-[104rem] px-5 py-28 sm:px-8 md:py-36">
         <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <Eyebrow>De l&apos;idée au tirage d&apos;art</Eyebrow>
-            <h2 className="mt-5 text-titre">Quatre étapes, la garantie du zéro défaut</h2>
-            <p className="plomb-texte mt-6">
-              Rien ne part en production avant votre validation formelle (Bon à Tirer). C&apos;est l&apos;assurance d&apos;un résultat irréprochable.
+            <Eyebrow>De l&apos;idée au tirage</Eyebrow>
+            <h2 className="mt-5 text-titre">Quatre étapes, zéro mauvaise surprise</h2>
+            <p className="mt-6 text-[1.0625rem] leading-relaxed text-plomb">
+              Rien ne part en production avant votre bon à tirer. Vous validez ce que vous recevrez.
             </p>
-            <Reveal effet="echelle" delai={150} className="mt-10">
+            <Reveal effet="monte" delai={150} className="mt-10">
               <BonDeTravail
                 reference="OSPM-2026-0001"
                 lignes={[
                   { label: "Supports", valeur: "Papier, PVC, textile, métal" },
                   { label: "Délai courant", valeur: "24 à 72 heures" },
                   { label: "Acompte", valeur: "50 % à la commande" },
-                  { label: "Retrait Atelier", valeur: "60, Rue Dessalines" },
+                  { label: "Retrait atelier", valeur: "60, Rue Dessalines" },
                 ]}
               />
             </Reveal>
           </div>
 
-          <ol>
+          <ol className="border-t border-plomb-noir/15">
             {ETAPES.map((e, i) => (
               <Reveal
                 key={e.numero}
-                effet="cote"
-                delai={i * 120}
+                effet="monte"
+                delai={i * 100}
                 as="li"
-                className="grid grid-cols-[auto_1fr] gap-7 border-t border-plomb-noir/10 py-8 last:border-b group"
+                className="grid grid-cols-[3rem_1fr] gap-6 border-b border-plomb-noir/15 py-8"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-or/40 bg-or/10 font-mono text-micro font-bold text-or-sombre transition duration-300 group-hover:bg-or group-hover:text-encre-nuit">
-                  {e.numero}
-                </span>
+                <span className="font-mono text-micro tracking-[0.14em] text-encre">{e.numero}</span>
                 <div>
-                  <h3 className="text-sous font-normal group-hover:text-encre transition-colors">{e.titre}</h3>
+                  <h3 className="text-sous">{e.titre}</h3>
                   <p className="mt-2 text-[0.9375rem] leading-relaxed text-plomb">{e.texte}</p>
                 </div>
               </Reveal>
             ))}
           </ol>
         </div>
-      </Section>
+      </section>
 
       {/* ---------------------------------------------------------- Appel */}
-      <Section className="pb-0">
-        <Reveal effet="echelle">
-        <div className="relative overflow-hidden rounded-plaque border border-or/30 bg-encre-profond px-8 py-16 text-creme shadow-flottant sm:px-14 md:py-20">
-          <div
-            aria-hidden
-            className="respire pointer-events-none absolute -right-24 -top-24 h-[30rem] w-[30rem] rounded-full opacity-50"
-            style={{
-              background: "radial-gradient(circle, rgba(27,92,224,0.6) 0%, rgba(197,160,89,0.2) 40%, rgba(0,0,0,0) 70%)",
-            }}
-          />
-          <div className="relative flex flex-col items-start justify-between gap-10 md:flex-row md:items-end">
-            <div className="max-w-xl">
-              <Logo hauteur={48} variante="plaque" />
-              <h2 className="mt-8 text-titre text-white">
-                Passez au comptoir, ou envoyez vos fichiers en ligne
-              </h2>
-              <p className="mt-5 text-creme/80 text-lg">
-                📍 {reglage(r, "contact.adresse")} <br />
-                🕒 {reglage(r, "contact.horaires")}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <Magnetique>
-                <Link href="/devis" className="btn-or brillance shadow-releve">
-                  ✨ Demander un devis en ligne
+      <section className="border-t-2 border-encre bg-creme-fonce">
+        <div className="mx-auto w-full max-w-[104rem] px-5 py-20 sm:px-8 md:py-28">
+          <Reveal effet="monte">
+            <div className="flex flex-col items-start justify-between gap-12 lg:flex-row lg:items-end">
+              <div className="max-w-2xl">
+                <h2 className="text-titre">Passez au comptoir, ou envoyez vos fichiers</h2>
+                <dl className="mt-8 grid gap-x-10 gap-y-3 text-[0.9375rem] sm:grid-cols-2">
+                  <div>
+                    <dt className="text-micro uppercase tracking-[0.14em] text-plomb-clair">
+                      Adresse
+                    </dt>
+                    <dd className="mt-1 text-plomb-noir">{reglage(r, "contact.adresse")}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-micro uppercase tracking-[0.14em] text-plomb-clair">
+                      Horaires
+                    </dt>
+                    <dd className="mt-1 text-plomb-noir">{reglage(r, "contact.horaires")}</dd>
+                  </div>
+                </dl>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link href="/devis" className="btn-encre">
+                  Demander un devis
                 </Link>
-              </Magnetique>
-              <Magnetique amplitude={10}>
                 <a
                   href={`https://wa.me/${wa}`}
                   target="_blank"
                   rel="noreferrer"
                   className="btn-rouge"
                 >
-                  💬 WhatsApp Direct
+                  WhatsApp direct
                 </a>
-              </Magnetique>
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
-        </Reveal>
-      </Section>
+      </section>
     </>
   );
 }

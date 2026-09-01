@@ -10,6 +10,11 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "20"
+      # Playwright ne sert qu'aux scripts d'audit visuel, en local. Sans cette
+      # variable, son installation telecharge ~200 Mo de navigateurs a chaque
+      # build — inutile ici, et de quoi saturer le disque de l'offre gratuite.
+      - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+        value: "1"
       - key: DATABASE_URL
         fromDatabase:
           name: ospm-db

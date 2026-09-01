@@ -4,8 +4,10 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { formatMontant } from "@/lib/money";
 import { visuelAtelier } from "@/lib/visuels";
-import { Eyebrow, Section } from "@/components/ui";
-import { Reveal, Lettres, Parallaxe, Magnetique } from "@/components/anim";
+import { Section } from "@/components/ui";
+import { Reveal, Parallaxe, Magnetique } from "@/components/anim";
+import { TitrePresse } from "@/components/titre-presse";
+import { LigneCommande } from "@/components/ligne-commande";
 
 // Les ateliers sont modifiables depuis l'admin : la page est rendue a la demande
 // plutot que figee au build.
@@ -41,10 +43,10 @@ export default async function CategorieService({ params }: { params: { slug: str
           <div className="mt-8 grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
             <div>
               <Reveal effet="fondu">
-                <Eyebrow>Atelier</Eyebrow>
+                <LigneCommande texte="atelier --detail" vitesse={42} delai={200} />
               </Reveal>
-              <h1 className="mt-6 text-affiche">
-                <Lettres texte={categorie.nom} depart={120} pas={28} />
+              <h1 className="mt-7 text-enseigne">
+                <TitrePresse texte={categorie.nom} depart={120} pas={28} />
               </h1>
               <Reveal effet="monte" delai={260}>
                 <p className="plomb-texte max-w-lg text-lg">{categorie.description}</p>
