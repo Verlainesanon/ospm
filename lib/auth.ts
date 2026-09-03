@@ -79,7 +79,19 @@ export async function login(
   email: string,
   password: string,
 ): Promise<{ ok: true } | { ok: false; erreur: string }> {
-  const user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+  // Une base injoignable n'est pas un identifiant invalide : dire « base
+  // indisponible » evite de chercher une faute de frappe pendant une panne.
+  let user;
+  try {
+    user = await prisma.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+  } catch (e) {
+    console.error("Connexion impossible — base injoignable:", e);
+    return {
+      ok: false,
+      erreur: "Base de donnees injoignable. Reessayez dans un instant.",
+    };
+  }
+
   if (!user || !user.actif) return { ok: false, erreur: "Identifiants invalides." };
   if (!verifyPassword(password, user.password)) {
     return { ok: false, erreur: "Identifiants invalides." };
